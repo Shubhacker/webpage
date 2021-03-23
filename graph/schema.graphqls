@@ -1,0 +1,186 @@
+type FetchToolData{
+    toolname: String
+    toollink: String
+    is_active: Boolean
+}
+
+type ToolResponceData{
+  data: [FetchToolData]
+}
+
+type Fetch{
+  employeename: String!
+  projectename: String!
+}
+
+input UpsertVideo{
+  video_link: String!
+  paid: Boolean!
+  videoTopic: String!
+  book_name: String
+  tool_name: String
+  status: Boolean!
+}
+
+input FetchVideoInput{
+  VideoId: Int
+  Video_topic: String
+  paid: Boolean
+}
+
+type FetchVideoResponce{
+data: [FetchVideo]
+}
+
+type FetchVideo{
+  video_link: String!
+  paid: Boolean!
+  videoTopic: String!
+  book_name: String
+  tool_name: String
+  status: Boolean!
+}
+
+input UpdateVideo{
+  VideoId: Int!
+  video_link: String
+  paid: Boolean
+  videoTopic: String
+  book_name: String
+  tool_name: String
+  status: Boolean
+}
+
+type UpsertVideoResponce{
+  message: String!
+}
+
+
+input UpsertTool {
+toolName: String!
+toolLink: String!
+status: Boolean!
+}
+
+input UpdateTools {
+tool_id: Int!
+toolName: String
+toolLink: String
+status: Boolean
+}
+
+input upserBlogData{
+blogText: String!
+videotopic: String
+bookname: String
+toolname: String
+referencelink: String
+status: Boolean
+}
+
+type blogResponce{
+  message: String!
+}
+
+type UpsertToolResponce{
+  message: String!
+}
+
+input UpsertBook {
+bookName: String!
+bookLink: String!
+status: Boolean!
+}
+
+input UpdateBook {
+book_id: Int!
+bookName: String
+bookLink: String
+status: Boolean
+}
+
+type UpsertBookResponce{
+  message: String!
+}
+
+type User {
+  id: ID!
+  name: String!
+}
+
+type BookResponce{
+  data: [FetchBookResponce]
+}
+
+type ResponceFetchBlog{
+  data: [FetchBlog]
+}
+
+type FetchBlog{
+blogText: String!
+videotopic: String
+bookname: String
+toolname: String
+referencelink: String
+status: Boolean
+}
+
+input FetchBlogInput{
+BlogId: Int!
+}
+
+input userUpsert{
+  user_name: String!
+  Password: String!
+  email: String
+  mob_no: Int
+  user_role: String!
+  is_active: Boolean!
+}
+
+input updateUser{
+  user_name: String!
+  oldPassword: String
+  Password: String
+  email: String
+  mob_no: Int
+  user_role: String
+  is_active: Boolean
+}
+
+type userResponce{
+  message: String!
+}
+
+type FetchBookResponce{
+  book_name: String!
+  bookLink: String!
+}
+input FetchBookInput{
+  ID: Int
+}
+
+input FetchToolsInput{
+  ID: Int
+}
+
+extend type Query {
+  FetchTool(input: FetchToolsInput) :ToolResponceData
+  FetchData : Fetch
+  FetchBook(input: FetchBookInput): BookResponce
+  FetchVideo(input: FetchVideoInput):FetchVideoResponce
+  FetchBlog(input: FetchBlogInput): ResponceFetchBlog
+}
+
+extend type Mutation {
+  UpsertToolData(input: UpsertTool!):UpsertToolResponce!
+  UpsertBookData(input: UpsertBook!):UpsertBookResponce!
+  UpdateToolData(input: UpdateTools!):UpsertToolResponce!
+  UpdateBookData(input: UpdateBook!):UpsertBookResponce!
+  UpsertVideoData(input: UpsertVideo!):UpsertVideoResponce!
+  UpdateVideoData(input: UpdateVideo!):UpsertVideoResponce!
+  UpsertUserData(input: userUpsert!): userResponce!
+  UpdateUserData(input: updateUser!):userResponce!
+  UpsertBlogData(input: upserBlogData!): blogResponce!
+}
+

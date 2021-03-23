@@ -1,0 +1,150 @@
+Request Structure For FrontEnd
+upsert = insert
+update
+fetch = gather data
+
+mutation {
+  UpsertToolData(input: { 
+    toolName: "tool_name 7",
+    toolLink: "tool_name 7", 
+    status: true
+  }) {
+    message
+  }
+}
+
+mutation{
+  UpsertBookData(input:{
+    bookName:"book_name 5"
+    bookLink:"book_link 5"
+    status:false
+  }){
+    message
+  }
+}
+
+
+mutation{
+UpdateBookData(input:{
+  book_id:5
+  bookName:"book_name 5.4"
+  bookLink:"book_link 5.4"
+  status:true
+}){
+  message
+}  
+}
+
+
+mutation{
+  UpdateToolData(input:{
+    tool_id:5
+    toolName:"tool_name 5"
+    toolLink:"tool_link 5"
+    status:true
+  }){
+    message
+  }
+}
+
+
+
+mutation{
+UpsertVideoData(input:{
+  video_link:"Video_Link 7"
+  paid:false
+  videoTopic:"test Video_topic 7"
+  book_name:"book_name 4"
+  # tool_name:"tool_name 4"
+  status:false
+}){
+  message
+}  
+}
+
+
+mutation{
+UpdateVideoData(input:{
+  VideoId:7
+  video_link:"Video_link 7.2"
+}){
+  message
+}  
+}
+
+
+query{
+  FetchBook(input:{
+    ID:3
+  }){
+data{
+  book_name
+  bookLink
+}
+  }
+}
+
+
+query{
+  FetchTool{
+    toolname
+  }
+}
+
+
+
+# Write your query or mutation here
+query {
+  FetchBook(input: { ID: 3 }) {
+    data {
+      book_name
+      bookLink
+    }
+  }
+}
+
+
+
+mutation{
+UpsertUserData(input:{
+  user_name:"dev_1"
+  Password:"Admin_123"
+  email:"Email_Test@123.com"
+  mob_no:1234567890
+  user_role:"admin"
+  is_active:false
+}){
+  message
+}  
+}
+
+
+mutation{
+  UpdateUserData(input:{
+    user_name:"dev_1"
+    oldPassword:"check_1233"
+    Password:"check_1233"
+    is_active: true
+    user_role:"tester"
+    email:"test@test.com"
+    mob_no:9988273
+  }){
+    message
+  }
+}
+
+query{
+FetchVideo(input:{
+   VideoId:3 
+   paid: true
+}){
+  data{
+    video_link
+    paid
+    videoTopic
+    book_name
+    tool_name
+    status
+  }
+}  
+}
