@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b4aeb7f9-0bf4-4852-aefc-f6e320595206" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/graph/postgres/FieldHelper.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graph/auth/authorize.go" beforeDir="false" afterPath="$PROJECT_DIR$/graph/auth/authorize.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/graph/auth/login.go" beforeDir="false" afterPath="$PROJECT_DIR$/graph/auth/login.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/graph/controller/insert.go" beforeDir="false" afterPath="$PROJECT_DIR$/graph/controller/insert.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/graph/entity/entity.go" beforeDir="false" afterPath="$PROJECT_DIR$/graph/entity/entity.go" afterDir="false" />

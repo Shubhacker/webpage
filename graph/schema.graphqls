@@ -116,6 +116,8 @@ type User {
 }
 
 type BookResponce{
+  Message: String!
+  Error: Boolean!
   data: [FetchBookResponce]
 }
 

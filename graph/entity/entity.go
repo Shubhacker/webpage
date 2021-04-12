@@ -76,7 +76,14 @@ type FetchBlogData struct{
 }
 
 type UserCheck struct{
-	UserId int
+	UserName string
+	Password string
+	UserRole string
+}
+
+type UserDetails struct{
+	UserID int
+	UserName string
 	UserRole string
 }
 
@@ -97,6 +104,12 @@ type FetchToolData struct {
 
 type FilterForTools struct {
 	ID *int
+}
+
+type Credentials struct{
+	Username string
+	Password string
+	AuthRole string
 }
 
 type FilterForBook struct{

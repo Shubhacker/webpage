@@ -2,8 +2,8 @@ package postgres
 
 import (
 	"context"
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/jmoiron/sqlx"
-	"github.com/shubhacker/gqlgen-todos/graph/auth"
 	"github.com/shubhacker/gqlgen-todos/graph/entity"
 	"github.com/shubhacker/gqlgen-todos/graph/model"
 	"log"
@@ -602,30 +602,43 @@ inner join video_table vt on vt.video_id = b.video_id`
 }
 
 
-func UserCheck(AdName string) *entity.UserCheck {
+func UserCheck() *entity.UserCheck {
 	log.Println("FetchBookDataFromDb()")
 	var entity entity.UserCheck
 	if pool == nil {
 		pool = GetPool()
 	}
-	querystring := `select ut.user_id , ur.user_role from user_table ut 
+	querystring := `select ut.user_name, ut."password" , ur.user_role from user_table ut 
 inner join user_role ur on ur.role_id = ut.user_role 
-where ut.user_name = $1`
-	 err := pool.QueryRow(context.Background(), querystring, AdName).Scan(&entity.UserId, &entity.UserRole)
+where ut.user_name = 'shubham'`
+	 err := pool.QueryRow(context.Background(), querystring).Scan(&entity.UserName,&entity.Password ,&entity.UserRole)
 	if err != nil {
 		log.Printf("%s - Error: %s here", err.Error())
 	}
 	return &entity
 }
 
-func AuthenticateUser(userEntity *entity.Login) (*entity.LoginResponce, error) {
-	var entity entity.LoginResponce
-	check,err := auth.GenerateJWT(userEntity.UserName, userEntity.Password)
-	if err!= nil{
-		log.Println("error in creating JWT Token!")
-	}
-	entity.JwtToken = &check
-	return &entity, nil
-}
+//func AuthenticateUser(userEntity *entity.Login) (*entity.LoginResponce, error) {
+//	var entity entity.LoginResponce
+//	AuthRole := AuthRoleForUser(userEntity.UserName)
+//	check,err := auth.GenerateJWT(userEntity.UserName, userEntity.Password,AuthRole)
+//	if err!= nil{
+//		log.Println("error in creating JWT Token!")
+//	}
+//	entity.JwtToken = &check
+//	return &entity, nil
+//}
 
-//func GetUserForAuthentication
+func GetUserDetails(pool *pgxpool.Pool, UserName string) (*entity.UserDetails, error) {
+	var userModel entity.UserDetails
+	if pool != nil {
+		queryString := `select ut.user_id ,ut.user_name ,ur.user_role from user_table ut 
+inner join user_role ur on ur.role_id = ut.user_role 
+where ut.user_name = $1`
+		err := pool.QueryRow(context.Background(), queryString, UserName).Scan(&userModel.UserID, &userModel.UserName, &userModel.UserRole)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return &userModel, nil
+}

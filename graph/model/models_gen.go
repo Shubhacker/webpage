@@ -3,7 +3,9 @@
 package model
 
 type BookResponce struct {
-	Data []*FetchBookResponce `json:"data"`
+	Message string               `json:"Message"`
+	Error   bool                 `json:"Error"`
+	Data    []*FetchBookResponce `json:"data"`
 }
 
 type Fetch struct {

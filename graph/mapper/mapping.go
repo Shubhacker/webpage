@@ -1,8 +1,10 @@
 package mapper
 
 import (
+	"encoding/json"
 	"errors"
 	"log"
+	"net/http"
 
 	"github.com/shubhacker/gqlgen-todos/graph/entity"
 	"github.com/shubhacker/gqlgen-todos/graph/model"
@@ -279,9 +281,29 @@ entity.Password = *input.Password
 return &entity
 }
 
-func MappingLogin(input *entity.LoginResponce)*model.LoginResponce{
+func MappingLogin(token string)*model.LoginResponce{
 	userModel := &model.LoginResponce{
-		JwtToken: input.JwtToken,
+		JwtToken: &token,
 	}
 	return userModel
+}
+
+func AuthenticateUserRest() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		//userName := r.PostFormValue("username")
+		//password := r.PostFormValue("password")
+		CheckUser := postgres.UserCheck()
+		//userCredentialsInput := model.UserCredentialsInput{
+		//	Username: userName,
+		//	Password: password,
+		//}
+		//userResponse, _ := AuthenticateUser(userCredentialsInput)
+		//w.Header().Add("Content-Type", "application/json")
+		//if userResponse.Error {
+		//	w.WriteHeader(http.StatusUnauthorized)
+		//	json.NewEncoder(w).Encode(userResponse)
+		//} else {
+			json.NewEncoder(w).Encode(CheckUser)
+		//}
+	}
 }

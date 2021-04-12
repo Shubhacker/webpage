@@ -1,23 +1,22 @@
 package auth
 
 import (
-	"context"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/jackc/pgx/v4/pgxpool"
-	"github.com/shubhacker/gqlgen-todos/graph/postgres"
-	"log"
+	//"github.com/shubhacker/gqlgen-todos/graph/postgres"
+	//"log"
 	"net/http"
 	"strings"
 )
 
 var jwtSecret = []byte("mysupersecretphrase")
 
-type contextKey struct {
-	name string
-}
-
-var userCtxKey = &contextKey{"UserID"}
+//type contextKey struct {
+//	name string
+//}
+//
+//var userCtxKey = &contextKey{"UserID"}
 
 func validateAndGetUserADName(header string) (string, error) {
 	authHeader := strings.Split(header, " ")
@@ -61,22 +60,22 @@ func AuthMiddleWare(pool *pgxpool.Pool) func(http.Handler) http.Handler {
 				next.ServeHTTP(response, request)
 				return
 			} else {
-				adName, err := validateAndGetUserADName(header)
-				if err != nil {
-					if request.RequestURI == "/v2/query" {
-						response.Header().Set("Content-Type", "application/json")
-						response.WriteHeader(http.StatusUnauthorized)
-					}
-					log.Println(err)
-				} else {
-					userModel := postgres.UserCheck(adName)
-					if userModel != nil {
-						log.Println("adname--->", adName)
-						ctx := context.WithValue(request.Context(), userCtxKey, userModel.UserId)
-						ctxSalesorg := context.WithValue(ctx, userCtxKey, nil)
-						request = request.WithContext(ctxSalesorg)
-					}
-				}
+				//adName, err := validateAndGetUserADName(header)
+				//if err != nil {
+				//	if request.RequestURI == "/v2/query" {
+				//		response.Header().Set("Content-Type", "application/json")
+				//		response.WriteHeader(http.StatusUnauthorized)
+				//	}
+				//	log.Println(err)
+				//} else {
+				//	//userModel := postgres.UserCheck(adName)
+				//	//if userModel != nil {
+				//	//	log.Println("adname--->", adName)
+				//	//	ctx := context.WithValue(request.Context(), userCtxKey, userModel.UserId)
+				//	//	ctxSalesorg := context.WithValue(ctx, userCtxKey, nil)
+				//	//	request = request.WithContext(ctxSalesorg)
+				//	//}
+				//}
 				next.ServeHTTP(response, request)
 			}
 		})
@@ -84,11 +83,11 @@ func AuthMiddleWare(pool *pgxpool.Pool) func(http.Handler) http.Handler {
 	}
 }
 
-func ForContext(ctx context.Context)(*string){
-	var userID *string
-	userIDValue, userOk := ctx.Value(userCtxKey).(string)
-	if userOk {
-		userID = &userIDValue
-	}
-	return userID
-}
+//func ForContext(ctx context.Context)(*string){
+//	var userID *string
+//	userIDValue, userOk := ctx.Value(userCtxKey).(string)
+//	if userOk {
+//		userID = &userIDValue
+//	}
+//	return userID
+//}

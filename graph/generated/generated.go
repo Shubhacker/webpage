@@ -43,7 +43,9 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	BookResponce struct {
-		Data func(childComplexity int) int
+		Data    func(childComplexity int) int
+		Error   func(childComplexity int) int
+		Message func(childComplexity int) int
 	}
 
 	Fetch struct {
@@ -193,6 +195,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.BookResponce.Data(childComplexity), true
+
+	case "BookResponce.Error":
+		if e.complexity.BookResponce.Error == nil {
+			break
+		}
+
+		return e.complexity.BookResponce.Error(childComplexity), true
+
+	case "BookResponce.Message":
+		if e.complexity.BookResponce.Message == nil {
+			break
+		}
+
+		return e.complexity.BookResponce.Message(childComplexity), true
 
 	case "Fetch.employeename":
 		if e.complexity.Fetch.Employeename == nil {
@@ -796,6 +812,8 @@ type User {
 }
 
 type BookResponce{
+  Message: String!
+  Error: Boolean!
   data: [FetchBookResponce]
 }
 
@@ -1163,6 +1181,76 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 // endregion ************************** directives.gotpl **************************
 
 // region    **************************** field.gotpl *****************************
+
+func (ec *executionContext) _BookResponce_Message(ctx context.Context, field graphql.CollectedField, obj *model.BookResponce) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BookResponce",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Message, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BookResponce_Error(ctx context.Context, field graphql.CollectedField, obj *model.BookResponce) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BookResponce",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Error, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
 
 func (ec *executionContext) _BookResponce_data(ctx context.Context, field graphql.CollectedField, obj *model.BookResponce) (ret graphql.Marshaler) {
 	defer func() {
@@ -4818,6 +4906,16 @@ func (ec *executionContext) _BookResponce(ctx context.Context, sel ast.Selection
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("BookResponce")
+		case "Message":
+			out.Values[i] = ec._BookResponce_Message(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "Error":
+			out.Values[i] = ec._BookResponce_Error(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "data":
 			out.Values[i] = ec._BookResponce_data(ctx, field, obj)
 		default:
