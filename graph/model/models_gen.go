@@ -3,7 +3,9 @@
 package model
 
 type BookResponce struct {
-	Data []*FetchBookResponce `json:"data"`
+	Message string               `json:"Message"`
+	Error   bool                 `json:"Error"`
+	Data    []*FetchBookResponce `json:"data"`
 }
 
 type Fetch struct {
@@ -25,7 +27,8 @@ type FetchBlogInput struct {
 }
 
 type FetchBookInput struct {
-	ID *int `json:"ID"`
+	ID     *int          `json:"ID"`
+	Filter []*FilterBook `json:"Filter"`
 }
 
 type FetchBookResponce struct {
@@ -66,6 +69,11 @@ type FetchVideoInput struct {
 
 type FetchVideoResponce struct {
 	Data []*FetchVideo `json:"data"`
+}
+
+type FilterBook struct {
+	Filter       *string `json:"Filter"`
+	FilterColumn *string `json:"FilterColumn"`
 }
 
 type MasterFetch struct {
@@ -147,6 +155,15 @@ type User struct {
 
 type BlogResponce struct {
 	Message string `json:"message"`
+}
+
+type Login struct {
+	UserName *string `json:"userName"`
+	Password *string `json:"Password"`
+}
+
+type LoginResponce struct {
+	JwtToken *string `json:"JwtToken"`
 }
 
 type UpdateUser struct {

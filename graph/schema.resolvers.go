@@ -6,7 +6,9 @@ package graph
 import (
 	"context"
 	"fmt"
+	"log"
 
+	"github.com/shubhacker/gqlgen-todos/graph/auth"
 	"github.com/shubhacker/gqlgen-todos/graph/controller"
 	"github.com/shubhacker/gqlgen-todos/graph/generated"
 	"github.com/shubhacker/gqlgen-todos/graph/model"
@@ -57,6 +59,11 @@ func (r *mutationResolver) UpsertBlogData(ctx context.Context, input model.Upser
 	return response, nil
 }
 
+func (r *queryResolver) Login(ctx context.Context, input *model.Login) (*model.LoginResponce, error) {
+	login := controller.LoginApi(ctx, input)
+	return login, nil
+}
+
 func (r *queryResolver) FetchMasterAPI(ctx context.Context) (*model.MasterFetch, error) {
 	panic(fmt.Errorf("not implemented"))
 }
@@ -72,6 +79,10 @@ func (r *queryResolver) FetchData(ctx context.Context) (*model.Fetch, error) {
 }
 
 func (r *queryResolver) FetchBook(ctx context.Context, input *model.FetchBookInput) (*model.BookResponce, error) {
+	UserName, UserRole := auth.ForContext(ctx)
+	if UserName == nil || UserRole == nil {
+		log.Println("You are UnAuthorized")
+	}
 	response := controller.FetchBookData(ctx, input)
 	return response, nil
 }

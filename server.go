@@ -1,6 +1,9 @@
 package main
 
 import (
+	"github.com/99designs/gqlgen/graphql/handler/transport"
+	"github.com/gorilla/websocket"
+	"github.com/shubhacker/gqlgen-todos/graph/auth"
 	"log"
 	"net/http"
 	"os"
@@ -27,6 +30,7 @@ func main() {
 	postgres.InitDbPool()
 	pool := postgres.GetPool()
 	controller.InitCodes(pool)
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
@@ -39,10 +43,22 @@ func main() {
 	}).Handler)
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
-
-	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	http.Handle("/query", srv)
-
+	srv.AddTransport(&transport.Websocket{
+		Upgrader: websocket.Upgrader{
+			CheckOrigin: func(r *http.Request) bool {
+				// Check against your desired domains here
+				return r.Host == "*"
+			},
+			ReadBufferSize:  1024,
+			WriteBufferSize: 1024,
+		},
+	})
+	router.Use(auth.AuthMiddleware(pool))
+	router.Handle("/", playground.Handler("GraphQL playground", "/query"))
+	//router.Post("/authenticate",mapper.AuthenticateUserRest())
+	http.Handle("/", http.FileServer(http.Dir("/tmp")))
+	router.Handle("/query", srv)
+	router.Handle("/v2/query/",srv)
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	log.Fatal(http.ListenAndServe(":"+port, router))
 }

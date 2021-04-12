@@ -43,7 +43,9 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	BookResponce struct {
-		Data func(childComplexity int) int
+		Data    func(childComplexity int) int
+		Error   func(childComplexity int) int
+		Message func(childComplexity int) int
 	}
 
 	Fetch struct {
@@ -110,6 +112,7 @@ type ComplexityRoot struct {
 		FetchMasterAPI func(childComplexity int) int
 		FetchTool      func(childComplexity int, input *model.FetchToolsInput) int
 		FetchVideo     func(childComplexity int, input *model.FetchVideoInput) int
+		Login          func(childComplexity int, input *model.Login) int
 	}
 
 	ResponceFetchBlog struct {
@@ -141,6 +144,10 @@ type ComplexityRoot struct {
 		Message func(childComplexity int) int
 	}
 
+	LoginResponce struct {
+		JwtToken func(childComplexity int) int
+	}
+
 	UserResponce struct {
 		Message func(childComplexity int) int
 	}
@@ -158,6 +165,7 @@ type MutationResolver interface {
 	UpsertBlogData(ctx context.Context, input model.UpserBlogData) (*model.BlogResponce, error)
 }
 type QueryResolver interface {
+	Login(ctx context.Context, input *model.Login) (*model.LoginResponce, error)
 	FetchMasterAPI(ctx context.Context) (*model.MasterFetch, error)
 	FetchTool(ctx context.Context, input *model.FetchToolsInput) (*model.ToolResponceData, error)
 	FetchData(ctx context.Context) (*model.Fetch, error)
@@ -187,6 +195,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.BookResponce.Data(childComplexity), true
+
+	case "BookResponce.Error":
+		if e.complexity.BookResponce.Error == nil {
+			break
+		}
+
+		return e.complexity.BookResponce.Error(childComplexity), true
+
+	case "BookResponce.Message":
+		if e.complexity.BookResponce.Message == nil {
+			break
+		}
+
+		return e.complexity.BookResponce.Message(childComplexity), true
 
 	case "Fetch.employeename":
 		if e.complexity.Fetch.Employeename == nil {
@@ -526,6 +548,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.FetchVideo(childComplexity, args["input"].(*model.FetchVideoInput)), true
 
+	case "Query.Login":
+		if e.complexity.Query.Login == nil {
+			break
+		}
+
+		args, err := ec.field_Query_Login_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Login(childComplexity, args["input"].(*model.Login)), true
+
 	case "ResponceFetchBlog.data":
 		if e.complexity.ResponceFetchBlog.Data == nil {
 			break
@@ -581,6 +615,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.BlogResponce.Message(childComplexity), true
+
+	case "loginResponce.JwtToken":
+		if e.complexity.LoginResponce.JwtToken == nil {
+			break
+		}
+
+		return e.complexity.LoginResponce.JwtToken(childComplexity), true
 
 	case "userResponce.message":
 		if e.complexity.UserResponce.Message == nil {
@@ -771,6 +812,8 @@ type User {
 }
 
 type BookResponce{
+  Message: String!
+  Error: Boolean!
   data: [FetchBookResponce]
 }
 
@@ -820,6 +863,12 @@ type FetchBookResponce{
 }
 input FetchBookInput{
   ID: Int
+  Filter:[FilterBook]
+}
+
+input FilterBook{
+Filter: String
+FilterColumn: String
 }
 
 input FetchToolsInput{
@@ -832,7 +881,16 @@ input FetchTool{
       FilterColumn: String
 }
 
+input login{
+    userName: String
+    Password: String
+}
+type loginResponce{
+    JwtToken: String
+}
+
 extend type Query {
+  Login(input: login): loginResponce
   FetchMasterAPI: MasterFetch
   FetchTool(input: FetchToolsInput) :ToolResponceData
   FetchData : Fetch
@@ -1056,6 +1114,21 @@ func (ec *executionContext) field_Query_FetchVideo_args(ctx context.Context, raw
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_Login_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *model.Login
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalOlogin2ᚖgithubᚗcomᚋshubhackerᚋgqlgenᚑtodosᚋgraphᚋmodelᚐLogin(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -1108,6 +1181,76 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 // endregion ************************** directives.gotpl **************************
 
 // region    **************************** field.gotpl *****************************
+
+func (ec *executionContext) _BookResponce_Message(ctx context.Context, field graphql.CollectedField, obj *model.BookResponce) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BookResponce",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Message, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BookResponce_Error(ctx context.Context, field graphql.CollectedField, obj *model.BookResponce) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BookResponce",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Error, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
 
 func (ec *executionContext) _BookResponce_data(ctx context.Context, field graphql.CollectedField, obj *model.BookResponce) (ret graphql.Marshaler) {
 	defer func() {
@@ -2312,6 +2455,45 @@ func (ec *executionContext) _Mutation_UpsertBlogData(ctx context.Context, field 
 	res := resTmp.(*model.BlogResponce)
 	fc.Result = res
 	return ec.marshalNblogResponce2ᚖgithubᚗcomᚋshubhackerᚋgqlgenᚑtodosᚋgraphᚋmodelᚐBlogResponce(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_Login(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_Login_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Login(rctx, args["input"].(*model.Login))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.LoginResponce)
+	fc.Result = res
+	return ec.marshalOloginResponce2ᚖgithubᚗcomᚋshubhackerᚋgqlgenᚑtodosᚋgraphᚋmodelᚐLoginResponce(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_FetchMasterAPI(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -3962,6 +4144,38 @@ func (ec *executionContext) _blogResponce_message(ctx context.Context, field gra
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _loginResponce_JwtToken(ctx context.Context, field graphql.CollectedField, obj *model.LoginResponce) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "loginResponce",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.JwtToken, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _userResponce_message(ctx context.Context, field graphql.CollectedField, obj *model.UserResponce) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -4032,6 +4246,14 @@ func (ec *executionContext) unmarshalInputFetchBookInput(ctx context.Context, ob
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ID"))
 			it.ID, err = ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "Filter":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Filter"))
+			it.Filter, err = ec.unmarshalOFilterBook2ᚕᚖgithubᚗcomᚋshubhackerᚋgqlgenᚑtodosᚋgraphᚋmodelᚐFilterBook(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4124,6 +4346,34 @@ func (ec *executionContext) unmarshalInputFetchVideoInput(ctx context.Context, o
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("paid"))
 			it.Paid, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputFilterBook(ctx context.Context, obj interface{}) (model.FilterBook, error) {
+	var it model.FilterBook
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "Filter":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Filter"))
+			it.Filter, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "FilterColumn":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("FilterColumn"))
+			it.FilterColumn, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4421,6 +4671,34 @@ func (ec *executionContext) unmarshalInputUpsertVideo(ctx context.Context, obj i
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputlogin(ctx context.Context, obj interface{}) (model.Login, error) {
+	var it model.Login
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "userName":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userName"))
+			it.UserName, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "Password":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Password"))
+			it.Password, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputupdateUser(ctx context.Context, obj interface{}) (model.UpdateUser, error) {
 	var it model.UpdateUser
 	var asMap = obj.(map[string]interface{})
@@ -4628,6 +4906,16 @@ func (ec *executionContext) _BookResponce(ctx context.Context, sel ast.Selection
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("BookResponce")
+		case "Message":
+			out.Values[i] = ec._BookResponce_Message(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "Error":
+			out.Values[i] = ec._BookResponce_Error(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "data":
 			out.Values[i] = ec._BookResponce_data(ctx, field, obj)
 		default:
@@ -4956,6 +5244,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Query")
+		case "Login":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_Login(ctx, field)
+				return res
+			})
 		case "FetchMasterAPI":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -5455,6 +5754,30 @@ func (ec *executionContext) _blogResponce(ctx context.Context, sel ast.Selection
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var loginResponceImplementors = []string{"loginResponce"}
+
+func (ec *executionContext) _loginResponce(ctx context.Context, sel ast.SelectionSet, obj *model.LoginResponce) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, loginResponceImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("loginResponce")
+		case "JwtToken":
+			out.Values[i] = ec._loginResponce_JwtToken(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -6198,6 +6521,38 @@ func (ec *executionContext) marshalOFetchVideoResponce2ᚖgithubᚗcomᚋshubhac
 	return ec._FetchVideoResponce(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalOFilterBook2ᚕᚖgithubᚗcomᚋshubhackerᚋgqlgenᚑtodosᚋgraphᚋmodelᚐFilterBook(ctx context.Context, v interface{}) ([]*model.FilterBook, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []interface{}
+	if v != nil {
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
+	}
+	var err error
+	res := make([]*model.FilterBook, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalOFilterBook2ᚖgithubᚗcomᚋshubhackerᚋgqlgenᚑtodosᚋgraphᚋmodelᚐFilterBook(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) unmarshalOFilterBook2ᚖgithubᚗcomᚋshubhackerᚋgqlgenᚑtodosᚋgraphᚋmodelᚐFilterBook(ctx context.Context, v interface{}) (*model.FilterBook, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputFilterBook(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {
 	if v == nil {
 		return nil, nil
@@ -6430,6 +6785,21 @@ func (ec *executionContext) marshalO__Type2ᚖgithubᚗcomᚋ99designsᚋgqlgen�
 		return graphql.Null
 	}
 	return ec.___Type(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOlogin2ᚖgithubᚗcomᚋshubhackerᚋgqlgenᚑtodosᚋgraphᚋmodelᚐLogin(ctx context.Context, v interface{}) (*model.Login, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputlogin(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOloginResponce2ᚖgithubᚗcomᚋshubhackerᚋgqlgenᚑtodosᚋgraphᚋmodelᚐLoginResponce(ctx context.Context, sel ast.SelectionSet, v *model.LoginResponce) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._loginResponce(ctx, sel, v)
 }
 
 // endregion ***************************** type.gotpl *****************************

@@ -2,11 +2,11 @@ package postgres
 
 import (
 	"context"
-	"log"
-
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/jmoiron/sqlx"
 	"github.com/shubhacker/gqlgen-todos/graph/entity"
 	"github.com/shubhacker/gqlgen-todos/graph/model"
+	"log"
 )
 
 func FetchTableDataIn() entity.Fetch {
@@ -274,17 +274,36 @@ func UpdateVideo(entity entity.UpdateVideoData) error {
 	return nil
 }
 
-func FetchBookDataFromDb(input *model.FetchBookInput) []entity.FetchBook {
+func FetchBookDataFromDb(input *model.FetchBookInput,Filter entity.FilterForBook) []entity.FetchBook {
 	log.Println("FetchBookDataFromDb()")
 	var responce []entity.FetchBook
 	if pool == nil {
 		pool = GetPool()
 	}
 	var inputargs []interface{}
-	querystring := `select book_name, book_link from book`
+	querystring := `select book_name, book_link from book where is_active = true`
 	if input.ID != nil {
-		querystring += ` where book_id = ?`
+		querystring += ` book_id = ?`
 		inputargs = append(inputargs, input.ID)
+	}
+	if &Filter.Filter != nil{
+		order := Filter.FilterColumn
+		if Filter.Filter == "asc"{
+			switch order{
+			case "book_name":
+				querystring += ` order by book_name asc`
+			case "book_link":
+				querystring += ` order by book_link asc`
+			}
+		}else if Filter.Filter == "desc"{
+			switch order{
+			case "book_name":
+				querystring += ` order by book_name desc`
+			case "book_link":
+				querystring += ` order by book_name desc`
+			}
+		}
+
 	}
 	querystring = sqlx.Rebind(sqlx.DOLLAR, querystring)
 	rows, err := pool.Query(context.Background(), querystring, inputargs...)
@@ -295,7 +314,7 @@ func FetchBookDataFromDb(input *model.FetchBookInput) []entity.FetchBook {
 		var entity entity.FetchBook
 		err = rows.Scan(&entity.Bookname, &entity.Booklink)
 		if err != nil {
-			log.Println("%s - Error: %s here 2", err.Error())
+			log.Println("%s - Error: %s here", err.Error())
 		}
 		responce = append(responce, entity)
 	}
@@ -580,4 +599,46 @@ inner join video_table vt on vt.video_id = b.video_id`
 		responce = append(responce, entity)
 	}
 	return responce
+}
+
+
+func UserCheck() *entity.UserCheck {
+	log.Println("FetchBookDataFromDb()")
+	var entity entity.UserCheck
+	if pool == nil {
+		pool = GetPool()
+	}
+	querystring := `select ut.user_name, ut."password" , ur.user_role from user_table ut 
+inner join user_role ur on ur.role_id = ut.user_role 
+where ut.user_name = 'shubham'`
+	 err := pool.QueryRow(context.Background(), querystring).Scan(&entity.UserName,&entity.Password ,&entity.UserRole)
+	if err != nil {
+		log.Printf("%s - Error: %s here", err.Error())
+	}
+	return &entity
+}
+
+//func AuthenticateUser(userEntity *entity.Login) (*entity.LoginResponce, error) {
+//	var entity entity.LoginResponce
+//	AuthRole := AuthRoleForUser(userEntity.UserName)
+//	check,err := auth.GenerateJWT(userEntity.UserName, userEntity.Password,AuthRole)
+//	if err!= nil{
+//		log.Println("error in creating JWT Token!")
+//	}
+//	entity.JwtToken = &check
+//	return &entity, nil
+//}
+
+func GetUserDetails(pool *pgxpool.Pool, UserName string) (*entity.UserDetails, error) {
+	var userModel entity.UserDetails
+	if pool != nil {
+		queryString := `select ut.user_id ,ut.user_name ,ur.user_role from user_table ut 
+inner join user_role ur on ur.role_id = ut.user_role 
+where ut.user_name = $1`
+		err := pool.QueryRow(context.Background(), queryString, UserName).Scan(&userModel.UserID, &userModel.UserName, &userModel.UserRole)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return &userModel, nil
 }

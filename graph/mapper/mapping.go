@@ -1,8 +1,10 @@
 package mapper
 
 import (
+	"encoding/json"
 	"errors"
 	"log"
+	"net/http"
 
 	"github.com/shubhacker/gqlgen-todos/graph/entity"
 	"github.com/shubhacker/gqlgen-todos/graph/model"
@@ -24,6 +26,22 @@ func MapFilterForTools(input *model.FetchToolsInput) entity.FilterForTools{
 		responce.ID = input.ID
 	}
 return responce
+}
+
+func FilterBook(input []*model.FilterBook)entity.FilterForBook{
+	log.Println("FilterBook()")
+var entity entity.FilterForBook
+for _,filter := range input{
+	if filter.Filter != nil{
+		if *filter.Filter == "ASC"{
+			entity.Filter = "asc"
+		}else if *filter.Filter == "DESC"{
+			entity.Filter = "desc"
+		}
+	}
+	entity.FilterColumn = *filter.FilterColumn
+}
+return entity
 }
 
 func FilterTool(tool []*model.FetchTool) entity.ToolFilter{
@@ -254,4 +272,38 @@ func MapFetchBlogData(input []entity.FetchBlogData) []*model.FetchBlog {
 		out = append(out, &bookentity)
 	}
 	return out
+}
+
+func MappingForLogin(input *model.Login) *entity.Login{
+var entity entity.Login
+entity.UserName = *input.UserName
+entity.Password = *input.Password
+return &entity
+}
+
+func MappingLogin(token string)*model.LoginResponce{
+	userModel := &model.LoginResponce{
+		JwtToken: &token,
+	}
+	return userModel
+}
+
+func AuthenticateUserRest() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		//userName := r.PostFormValue("username")
+		//password := r.PostFormValue("password")
+		CheckUser := postgres.UserCheck()
+		//userCredentialsInput := model.UserCredentialsInput{
+		//	Username: userName,
+		//	Password: password,
+		//}
+		//userResponse, _ := AuthenticateUser(userCredentialsInput)
+		//w.Header().Add("Content-Type", "application/json")
+		//if userResponse.Error {
+		//	w.WriteHeader(http.StatusUnauthorized)
+		//	json.NewEncoder(w).Encode(userResponse)
+		//} else {
+			json.NewEncoder(w).Encode(CheckUser)
+		//}
+	}
 }

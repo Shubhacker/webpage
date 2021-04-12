@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"github.com/shubhacker/gqlgen-todos/graph/auth"
 	"log"
 
 	"github.com/shubhacker/gqlgen-todos/graph/entity"
@@ -101,7 +102,16 @@ func UpdateToolsData(ctx context.Context, input model.UpdateTools) *model.Upsert
 
 func FetchBookData(ctx context.Context, input *model.FetchBookInput) *model.BookResponce {
 	var responce model.BookResponce
-	data := postgres.FetchBookDataFromDb(input)
+	AuthRole := auth.GetAuthRole(ctx)
+	if *AuthRole != "developers"{
+		responce.Error = true
+		responce.Message = "You Do Not Have Permission For Action"
+		responce.Data = nil
+		log.Println(*AuthRole)
+		return &responce
+	}
+	FilterData := mapper.FilterBook(input.Filter)
+	data := postgres.FetchBookDataFromDb(input,FilterData)
 	mapData := mapper.MapFetchBookData(data)
 	responce.Data = mapData
 	return &responce
@@ -175,3 +185,19 @@ func FetchBlogData(ctx context.Context, input *model.FetchBlogInput) *model.Resp
 //	data := postgres.FetchMasterBlogDataFromDb()
 //	responce.Blog = data
 //}
+
+
+func LoginApi(ctx context.Context, input *model.Login)*model.LoginResponce{
+mapLogin := mapper.MappingForLogin(input)
+//LoginPostgres,err := postgres.AuthenticateUser(mapLogin)
+	AuthRole := postgres.AuthRoleForUser(mapLogin.UserName)
+	check,err := auth.GenerateJWT(mapLogin.UserName, mapLogin.Password,AuthRole)
+	if err!= nil{
+		log.Println("error in creating JWT Token!")
+	}
+if err != nil{
+	log.Println("Error in Authenticate!")
+}
+mapTest := mapper.MappingLogin(check)
+return mapTest
+}
