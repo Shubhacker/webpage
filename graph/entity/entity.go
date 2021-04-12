@@ -61,6 +61,11 @@ type FetchBook struct {
 	Booklink string
 }
 
+type ToolFilter struct {
+	Filter string
+	FilterColumn string
+}
+
 type FetchBlogData struct{
 	BlogText *string
 	Videotopic string
@@ -74,6 +79,12 @@ type FetchToolData struct {
 	Tool_name *string
 	Tool_link *string
 	Is_active *bool
+}
+
+type FilterForTools struct {
+	ID *int
+	Arrange *string
+	Column *string
 }
 
 type UpsertUser struct {

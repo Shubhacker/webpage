@@ -41,6 +41,13 @@ type FetchVideo{
   status: Boolean!
 }
 
+type MasterFetch{
+Video:[FetchVideo]
+Tool:[FetchToolData]
+Blog:[FetchBlog]
+Book:[FetchBookResponce]
+}
+
 input UpdateVideo{
   VideoId: Int!
   video_link: String
@@ -162,9 +169,16 @@ input FetchBookInput{
 
 input FetchToolsInput{
   ID: Int
+  Filter:[FetchTool]
+}
+
+input FetchTool{
+      Filter: String
+      FilterColumn: String
 }
 
 extend type Query {
+  FetchMasterAPI: MasterFetch
   FetchTool(input: FetchToolsInput) :ToolResponceData
   FetchData : Fetch
   FetchBook(input: FetchBookInput): BookResponce

@@ -17,6 +17,25 @@ func MapFetchData(entity entity.Fetch) *model.Fetch {
 	return &out
 }
 
+func MapFilterForTools(input *model.FetchToolsInput) entity.FilterForTools{
+	log.Println("MapFilterForTools()")
+	var responce entity.FilterForTools
+	if input.ID != nil{
+		responce.ID = input.ID
+	}
+return responce
+}
+
+func FilterTool(tool []*model.FetchTool) entity.ToolFilter{
+	log.Println("FilterTool()")
+	 var entity entity.ToolFilter
+	 for _,input := range tool{
+		 	entity.Filter = *input.Filter
+		 	entity.FilterColumn = *input.FilterColumn
+	 }
+	 return entity
+}
+
 func MapFetchDataForTools(tools []*entity.FetchToolData) []*model.FetchToolData {
 	var out []*model.FetchToolData
 
