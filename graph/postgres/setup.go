@@ -11,14 +11,7 @@ import (
 var pool *pgxpool.Pool
 
 func InitDbPool() {
-	// host := os.Getenv("DB_HOST")
-	// port := os.Getenv("DB_PORT")
-	// user := os.Getenv("DB_USER")
-	// pass := os.Getenv("DB_PASSWORD")
-	// sslmode := os.Getenv("SSLMODE")
-
-	databaseUrl := " host=" + "localhost" + " port=" + "8888" + " user=" + "postgres" + " password=" + "RogStrix@1080" + " dbname=" + "postgres" + " sslmode=" + "disable"
-
+	databaseUrl := " host=" +"localhost" + " port=" + "8888"+ " user=" + "postgres"+ " password=" + "RogStrix@1080"+ " dbname=" + "postgres"+ " sslmode=" + "disable"
 	config, err := pgxpool.ParseConfig(databaseUrl)
 	if err != nil {
 		log.Print(err)

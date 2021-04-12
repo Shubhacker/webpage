@@ -18,7 +18,10 @@ func FetchTableData(ctx context.Context) *model.Fetch {
 
 func FetchToolData(ctx context.Context, input *model.FetchToolsInput) *model.ToolResponceData {
 	var responce model.ToolResponceData
-	data := postgres.FetchToolDataFromDb(input)
+
+	Filter := mapper.MapFilterForTools(input)
+	FilterMap := mapper.FilterTool(input.Filter)
+	data := postgres.FetchToolDataFromDb(Filter,FilterMap)
 	mapData := mapper.MapFetchDataForTools(data)
 	responce.Data = mapData
 	return &responce
@@ -163,5 +166,12 @@ func FetchBlogData(ctx context.Context, input *model.FetchBlogInput) *model.Resp
 	data := postgres.FetchBlogDataFromDb(input)
 	mapData := mapper.MapFetchBlogData(data)
 	responce.Data = mapData
+
 	return &responce
 }
+
+//func MasterAPI() *model.MasterFetch{
+//	var responce model.MasterFetch
+//	data := postgres.FetchMasterBlogDataFromDb()
+//	responce.Blog = data
+//}

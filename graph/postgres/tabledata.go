@@ -25,20 +25,38 @@ func FetchTableDataIn() entity.Fetch {
 	return response
 }
 
-func FetchToolDataFromDb(input *model.FetchToolsInput) []*entity.FetchToolData {
+func FetchToolDataFromDb(input entity.FilterForTools,Filterentity entity.ToolFilter) []*entity.FetchToolData {
 	log.Println("FetchToolDataFromDb()")
 	var response []*entity.FetchToolData
 	if pool == nil {
 		pool = GetPool()
 	}
-	querystring := `select tool_name , tool_link , is_active from tools`
+	querystring := `select tool_name , tool_link , is_active from tools where is_active = true`
 	var inputargs []interface{}
 	if input.ID != nil {
-		querystring = querystring + ` where tools_id = ?`
+		querystring = querystring + ` tools_id = ?`
 		inputargs = append(inputargs, input.ID)
-		querystring = sqlx.Rebind(sqlx.DOLLAR, querystring)
 	}
-
+	if &Filterentity.Filter != nil {
+		if Filterentity.Filter == "asc"{
+			order := Filterentity.FilterColumn
+			switch order{
+			case "tool_name":
+				querystring += ` order by tool_name asc`
+			case "tool_link":
+				querystring += ` order by tool_link asc`
+			}
+		}else if Filterentity.Filter == "desc"{
+			order := Filterentity.FilterColumn
+			switch order{
+			case "tool_name":
+				querystring += ` order by tool_name desc`
+			case "tool_link":
+				querystring += ` order by tool_link desc`
+			}
+		}
+	}
+	querystring = sqlx.Rebind(sqlx.DOLLAR, querystring)
 	rows, err := pool.Query(context.Background(), querystring, inputargs...)
 	if err != nil {
 		log.Printf("%s - Error: %s", err.Error())
@@ -47,7 +65,7 @@ func FetchToolDataFromDb(input *model.FetchToolsInput) []*entity.FetchToolData {
 		var entity entity.FetchToolData
 		err = rows.Scan(&entity.Tool_name, &entity.Tool_link, &entity.Is_active)
 		if err != nil {
-			log.Println("%s - Error: %s here 2", err.Error())
+			log.Println("%s - Error: %s here", err.Error())
 		}
 		response = append(response, &entity)
 	}
@@ -529,6 +547,32 @@ where b.blog_id = $1`
 	}
 	for rows.Next() {
 		var entity entity.FetchBlogData
+		err = rows.Scan(&entity.BlogText, &entity.Videotopic, &entity.Bookname, &entity.Toolname, &entity.Status, &entity.Referencelink)
+		if err != nil {
+			log.Println("%s - Error: %s here 2", err.Error())
+		}
+		responce = append(responce, entity)
+	}
+	return responce
+}
+
+
+func FetchMasterBlogDataFromDb() []model.FetchBlog {
+	log.Println("FetchBookDataFromDb()")
+	var responce []model.FetchBlog
+	if pool == nil {
+		pool = GetPool()
+	}
+	querystring := `select b.blog_text , vt.video_topic , b2.book_name , t.tool_name , b.is_active , b.reference_link from blog b
+inner join book b2 on b2.book_id = b.book_id 
+inner join tools t on t.tools_id = b.tools_id 
+inner join video_table vt on vt.video_id = b.video_id`
+	rows, err := pool.Query(context.Background(), querystring)
+	if err != nil {
+		log.Printf("%s - Error: %s here", err.Error())
+	}
+	for rows.Next() {
+		var entity model.FetchBlog
 		err = rows.Scan(&entity.BlogText, &entity.Videotopic, &entity.Bookname, &entity.Toolname, &entity.Status, &entity.Referencelink)
 		if err != nil {
 			log.Println("%s - Error: %s here 2", err.Error())

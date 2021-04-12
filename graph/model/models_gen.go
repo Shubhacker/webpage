@@ -33,6 +33,11 @@ type FetchBookResponce struct {
 	BookLink string `json:"bookLink"`
 }
 
+type FetchTool struct {
+	Filter       *string `json:"Filter"`
+	FilterColumn *string `json:"FilterColumn"`
+}
+
 type FetchToolData struct {
 	Toolname *string `json:"toolname"`
 	Toollink *string `json:"toollink"`
@@ -40,7 +45,8 @@ type FetchToolData struct {
 }
 
 type FetchToolsInput struct {
-	ID *int `json:"ID"`
+	ID     *int         `json:"ID"`
+	Filter []*FetchTool `json:"Filter"`
 }
 
 type FetchVideo struct {
@@ -60,6 +66,13 @@ type FetchVideoInput struct {
 
 type FetchVideoResponce struct {
 	Data []*FetchVideo `json:"data"`
+}
+
+type MasterFetch struct {
+	Video []*FetchVideo        `json:"Video"`
+	Tool  []*FetchToolData     `json:"Tool"`
+	Blog  []*FetchBlog         `json:"Blog"`
+	Book  []*FetchBookResponce `json:"Book"`
 }
 
 type ResponceFetchBlog struct {
