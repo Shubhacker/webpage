@@ -165,6 +165,12 @@ type FetchBookResponce{
 }
 input FetchBookInput{
   ID: Int
+  Filter:[FilterBook]
+}
+
+input FilterBook{
+Filter: String
+FilterColumn: String
 }
 
 input FetchToolsInput{
@@ -177,7 +183,16 @@ input FetchTool{
       FilterColumn: String
 }
 
+input login{
+    userName: String
+    Password: String
+}
+type loginResponce{
+    JwtToken: String
+}
+
 extend type Query {
+  Login(input: login): loginResponce
   FetchMasterAPI: MasterFetch
   FetchTool(input: FetchToolsInput) :ToolResponceData
   FetchData : Fetch

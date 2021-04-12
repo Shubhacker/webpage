@@ -2,11 +2,11 @@ package postgres
 
 import (
 	"context"
-	"log"
-
 	"github.com/jmoiron/sqlx"
+	"github.com/shubhacker/gqlgen-todos/graph/auth"
 	"github.com/shubhacker/gqlgen-todos/graph/entity"
 	"github.com/shubhacker/gqlgen-todos/graph/model"
+	"log"
 )
 
 func FetchTableDataIn() entity.Fetch {
@@ -274,17 +274,36 @@ func UpdateVideo(entity entity.UpdateVideoData) error {
 	return nil
 }
 
-func FetchBookDataFromDb(input *model.FetchBookInput) []entity.FetchBook {
+func FetchBookDataFromDb(input *model.FetchBookInput,Filter entity.FilterForBook) []entity.FetchBook {
 	log.Println("FetchBookDataFromDb()")
 	var responce []entity.FetchBook
 	if pool == nil {
 		pool = GetPool()
 	}
 	var inputargs []interface{}
-	querystring := `select book_name, book_link from book`
+	querystring := `select book_name, book_link from book where is_active = true`
 	if input.ID != nil {
-		querystring += ` where book_id = ?`
+		querystring += ` book_id = ?`
 		inputargs = append(inputargs, input.ID)
+	}
+	if &Filter.Filter != nil{
+		order := Filter.FilterColumn
+		if Filter.Filter == "asc"{
+			switch order{
+			case "book_name":
+				querystring += ` order by book_name asc`
+			case "book_link":
+				querystring += ` order by book_link asc`
+			}
+		}else if Filter.Filter == "desc"{
+			switch order{
+			case "book_name":
+				querystring += ` order by book_name desc`
+			case "book_link":
+				querystring += ` order by book_name desc`
+			}
+		}
+
 	}
 	querystring = sqlx.Rebind(sqlx.DOLLAR, querystring)
 	rows, err := pool.Query(context.Background(), querystring, inputargs...)
@@ -295,7 +314,7 @@ func FetchBookDataFromDb(input *model.FetchBookInput) []entity.FetchBook {
 		var entity entity.FetchBook
 		err = rows.Scan(&entity.Bookname, &entity.Booklink)
 		if err != nil {
-			log.Println("%s - Error: %s here 2", err.Error())
+			log.Println("%s - Error: %s here", err.Error())
 		}
 		responce = append(responce, entity)
 	}
@@ -581,3 +600,32 @@ inner join video_table vt on vt.video_id = b.video_id`
 	}
 	return responce
 }
+
+
+func UserCheck(AdName string) *entity.UserCheck {
+	log.Println("FetchBookDataFromDb()")
+	var entity entity.UserCheck
+	if pool == nil {
+		pool = GetPool()
+	}
+	querystring := `select ut.user_id , ur.user_role from user_table ut 
+inner join user_role ur on ur.role_id = ut.user_role 
+where ut.user_name = $1`
+	 err := pool.QueryRow(context.Background(), querystring, AdName).Scan(&entity.UserId, &entity.UserRole)
+	if err != nil {
+		log.Printf("%s - Error: %s here", err.Error())
+	}
+	return &entity
+}
+
+func AuthenticateUser(userEntity *entity.Login) (*entity.LoginResponce, error) {
+	var entity entity.LoginResponce
+	check,err := auth.GenerateJWT(userEntity.UserName, userEntity.Password)
+	if err!= nil{
+		log.Println("error in creating JWT Token!")
+	}
+	entity.JwtToken = &check
+	return &entity, nil
+}
+
+//func GetUserForAuthentication

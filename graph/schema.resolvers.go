@@ -57,6 +57,11 @@ func (r *mutationResolver) UpsertBlogData(ctx context.Context, input model.Upser
 	return response, nil
 }
 
+func (r *queryResolver) Login(ctx context.Context, input *model.Login) (*model.LoginResponce, error) {
+	login := controller.LoginApi(ctx, input)
+	return login, nil
+}
+
 func (r *queryResolver) FetchMasterAPI(ctx context.Context) (*model.MasterFetch, error) {
 	panic(fmt.Errorf("not implemented"))
 }

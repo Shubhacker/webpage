@@ -14,6 +14,7 @@ import (
 	"github.com/shubhacker/gqlgen-todos/graph/controller"
 	"github.com/shubhacker/gqlgen-todos/graph/generated"
 	"github.com/shubhacker/gqlgen-todos/graph/postgres"
+	"github.com/shubhacker/gqlgen-todos/graph/auth"
 )
 
 const defaultPort = "8080"
@@ -27,6 +28,7 @@ func main() {
 	postgres.InitDbPool()
 	pool := postgres.GetPool()
 	controller.InitCodes(pool)
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
@@ -39,7 +41,7 @@ func main() {
 	}).Handler)
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
-
+	router.Use(auth.AuthMiddleWare(pool))
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/query", srv)
 

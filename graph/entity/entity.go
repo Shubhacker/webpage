@@ -75,6 +75,20 @@ type FetchBlogData struct{
 	Status bool
 }
 
+type UserCheck struct{
+	UserId int
+	UserRole string
+}
+
+type Login struct {
+	UserName string
+	Password string
+}
+
+type LoginResponce struct{
+	JwtToken *string
+}
+
 type FetchToolData struct {
 	Tool_name *string
 	Tool_link *string
@@ -83,8 +97,11 @@ type FetchToolData struct {
 
 type FilterForTools struct {
 	ID *int
-	Arrange *string
-	Column *string
+}
+
+type FilterForBook struct{
+	Filter string
+	FilterColumn string
 }
 
 type UpsertUser struct {

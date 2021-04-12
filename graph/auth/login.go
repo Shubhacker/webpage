@@ -1,20 +1,25 @@
-package main
+package auth
 
 import (
+	jwt "github.com/dgrijalva/jwt-go"
 	"log"
 	"time"
-	jwt "github.com/dgrijalva/jwt-go"
 )
 
 var mySigningKey = []byte("mysupersecretphrase")
 
-func GenerateJWT()(string, error){
+type contextkey struct{
+	name string
+}
+
+func GenerateJWT(Username string, passWord string)(string, error){
 	token := jwt.New(jwt.SigningMethodHS256)
 
 	claims := token.Claims.(jwt.MapClaims)
 
 	claims["authorized"] = true
-	claims["user"] = "Piyush Takale"
+	claims["user"] = Username
+	claims["password"] = passWord
 	claims["exp"] = time.Now().Add(time.Minute * 30).Unix()
 
 	tokenString,err := token.SignedString(mySigningKey)
@@ -22,13 +27,4 @@ func GenerateJWT()(string, error){
 		log.Println("Something Went Wrong!",err)
 	}
 	return tokenString,err
-}
-
-func main(){
-	log.Println("Creating JWT")
-	tokenstring, err := GenerateJWT()
-	if err != nil{
-		log.Println("Error in creating JWT",err)
-	}
-	log.Println(tokenstring)
 }

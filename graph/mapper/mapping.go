@@ -26,6 +26,22 @@ func MapFilterForTools(input *model.FetchToolsInput) entity.FilterForTools{
 return responce
 }
 
+func FilterBook(input []*model.FilterBook)entity.FilterForBook{
+	log.Println("FilterBook()")
+var entity entity.FilterForBook
+for _,filter := range input{
+	if filter.Filter != nil{
+		if *filter.Filter == "ASC"{
+			entity.Filter = "asc"
+		}else if *filter.Filter == "DESC"{
+			entity.Filter = "desc"
+		}
+	}
+	entity.FilterColumn = *filter.FilterColumn
+}
+return entity
+}
+
 func FilterTool(tool []*model.FetchTool) entity.ToolFilter{
 	log.Println("FilterTool()")
 	 var entity entity.ToolFilter
@@ -254,4 +270,18 @@ func MapFetchBlogData(input []entity.FetchBlogData) []*model.FetchBlog {
 		out = append(out, &bookentity)
 	}
 	return out
+}
+
+func MappingForLogin(input *model.Login) *entity.Login{
+var entity entity.Login
+entity.UserName = *input.UserName
+entity.Password = *input.Password
+return &entity
+}
+
+func MappingLogin(input *entity.LoginResponce)*model.LoginResponce{
+	userModel := &model.LoginResponce{
+		JwtToken: input.JwtToken,
+	}
+	return userModel
 }

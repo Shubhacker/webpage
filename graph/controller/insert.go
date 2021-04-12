@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"github.com/shubhacker/gqlgen-todos/graph/auth"
 	"log"
 
 	"github.com/shubhacker/gqlgen-todos/graph/entity"
@@ -101,7 +102,10 @@ func UpdateToolsData(ctx context.Context, input model.UpdateTools) *model.Upsert
 
 func FetchBookData(ctx context.Context, input *model.FetchBookInput) *model.BookResponce {
 	var responce model.BookResponce
-	data := postgres.FetchBookDataFromDb(input)
+	userId := auth.ForContext(ctx)
+	log.Println("userId--->",userId)
+	FilterData := mapper.FilterBook(input.Filter)
+	data := postgres.FetchBookDataFromDb(input,FilterData)
 	mapData := mapper.MapFetchBookData(data)
 	responce.Data = mapData
 	return &responce
@@ -175,3 +179,14 @@ func FetchBlogData(ctx context.Context, input *model.FetchBlogInput) *model.Resp
 //	data := postgres.FetchMasterBlogDataFromDb()
 //	responce.Blog = data
 //}
+
+
+func LoginApi(ctx context.Context, input *model.Login)*model.LoginResponce{
+mapLogin := mapper.MappingForLogin(input)
+LoginPostgres,err := postgres.AuthenticateUser(mapLogin)
+if err != nil{
+	log.Println("Error in Authenticate!")
+}
+mapTest := mapper.MappingLogin(LoginPostgres)
+return mapTest
+}
