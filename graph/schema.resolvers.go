@@ -65,7 +65,12 @@ func (r *queryResolver) Login(ctx context.Context, input *model.Login) (*model.L
 }
 
 func (r *queryResolver) FetchMasterAPI(ctx context.Context) (*model.MasterFetch, error) {
-	panic(fmt.Errorf("not implemented"))
+	UserName, UserRole := auth.ForContext(ctx)
+	if UserName == nil || UserRole == nil {
+		log.Println("You are UnAuthorized")
+	}
+	responce := controller.MasterAPI(ctx)
+	return responce, nil
 }
 
 func (r *queryResolver) FetchTool(ctx context.Context, input *model.FetchToolsInput) (*model.ToolResponceData, error) {

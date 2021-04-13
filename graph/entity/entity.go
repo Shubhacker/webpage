@@ -153,3 +153,15 @@ type UpsertBlog struct {
 	Referencelink string
 	Status        bool
 }
+
+
+type FetchBlog struct {
+	BlogId int
+	BlogText string
+	VideoId int
+	VideoTopic string
+	BookId int
+	BookName string
+	ToolId int
+	ToolName string
+}

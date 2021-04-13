@@ -22,7 +22,7 @@ func FetchToolData(ctx context.Context, input *model.FetchToolsInput) *model.Too
 
 	Filter := mapper.MapFilterForTools(input)
 	FilterMap := mapper.FilterTool(input.Filter)
-	data := postgres.FetchToolDataFromDb(Filter,FilterMap)
+	data := postgres.FetchToolDataFromDb(Filter.ID,FilterMap.Filter,FilterMap.FilterColumn)
 	mapData := mapper.MapFetchDataForTools(data)
 	responce.Data = mapData
 	return &responce
@@ -107,11 +107,10 @@ func FetchBookData(ctx context.Context, input *model.FetchBookInput) *model.Book
 		responce.Error = true
 		responce.Message = "You Do Not Have Permission For Action"
 		responce.Data = nil
-		log.Println(*AuthRole)
 		return &responce
 	}
 	FilterData := mapper.FilterBook(input.Filter)
-	data := postgres.FetchBookDataFromDb(input,FilterData)
+	data := postgres.FetchBookDataFromDb(input,FilterData.Filter,FilterData.FilterColumn)
 	mapData := mapper.MapFetchBookData(data)
 	responce.Data = mapData
 	return &responce
@@ -180,13 +179,6 @@ func FetchBlogData(ctx context.Context, input *model.FetchBlogInput) *model.Resp
 	return &responce
 }
 
-//func MasterAPI() *model.MasterFetch{
-//	var responce model.MasterFetch
-//	data := postgres.FetchMasterBlogDataFromDb()
-//	responce.Blog = data
-//}
-
-
 func LoginApi(ctx context.Context, input *model.Login)*model.LoginResponce{
 mapLogin := mapper.MappingForLogin(input)
 //LoginPostgres,err := postgres.AuthenticateUser(mapLogin)
@@ -200,4 +192,18 @@ if err != nil{
 }
 mapTest := mapper.MappingLogin(check)
 return mapTest
+}
+
+func MasterAPI(ctx context.Context) *model.MasterFetch{
+	var responce model.MasterFetch
+	AuthRole := auth.GetAuthRole(ctx)
+	if *AuthRole != "developers"{
+		responce.Error = true
+		responce.Message= "Only Admin Can Access MasterAPI"
+		return &responce
+	}
+	data := postgres.FetchMasterBlogDataFromDb()
+	Map := mapper.MapForMaster(data)
+	responce.Data = Map
+	return &responce
 }

@@ -3,12 +3,11 @@ package mapper
 import (
 	"encoding/json"
 	"errors"
-	"log"
-	"net/http"
-
 	"github.com/shubhacker/gqlgen-todos/graph/entity"
 	"github.com/shubhacker/gqlgen-todos/graph/model"
 	"github.com/shubhacker/gqlgen-todos/graph/postgres"
+	"log"
+	"net/http"
 )
 
 func MapFetchData(entity entity.Fetch) *model.Fetch {
@@ -306,4 +305,26 @@ func AuthenticateUserRest() http.HandlerFunc {
 			json.NewEncoder(w).Encode(CheckUser)
 		//}
 	}
+}
+
+func MapForMaster(input []entity.FetchBlog)[]*model.MasterResponce {
+	var Outer []*model.MasterResponce
+	for _, check := range input{
+		var responce model.MasterResponce
+		VideoData := postgres.FetchVideoData(nil)
+		mapVideoData := MapVideoFetchData(VideoData)
+		BookData := postgres.FetchBookDataFromDb(nil,"","")
+		mapBookData := MapFetchBookData(BookData)
+		ToolData := postgres.FetchToolDataFromDb(nil,"","")
+		mapToolData := MapFetchDataForTools(ToolData)
+		BlogData := postgres.FetchBlogDataFromDb(nil)
+		mapBlogData := MapFetchBlogData(BlogData)
+		responce.Video = mapVideoData
+		responce.Book = mapBookData
+		responce.Tool = mapToolData
+		responce.Blog = mapBlogData
+		log.Println("testing purpose:--->",check)
+		Outer = append(Outer, &responce)
+	}
+	return Outer
 }
