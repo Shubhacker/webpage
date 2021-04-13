@@ -199,7 +199,13 @@ type loginResponce{
     JwtToken: String
 }
 
+type ExcelUserResponce{
+    Error: Boolean!
+    Message: String!
+}
+
 extend type Query {
+  CreateExcelForUser: ExcelUserResponce
   Login(input: login): loginResponce
   FetchMasterAPI: MasterFetch
   FetchTool(input: FetchToolsInput) :ToolResponceData

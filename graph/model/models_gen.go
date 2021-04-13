@@ -8,6 +8,11 @@ type BookResponce struct {
 	Data    []*FetchBookResponce `json:"data"`
 }
 
+type ExcelUserResponce struct {
+	Error   bool   `json:"Error"`
+	Message string `json:"Message"`
+}
+
 type Fetch struct {
 	Employeename string `json:"employeename"`
 	Projectename string `json:"projectename"`

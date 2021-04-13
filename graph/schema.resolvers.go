@@ -5,7 +5,6 @@ package graph
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/shubhacker/gqlgen-todos/graph/auth"
@@ -57,6 +56,11 @@ func (r *mutationResolver) UpdateUserData(ctx context.Context, input model.Updat
 func (r *mutationResolver) UpsertBlogData(ctx context.Context, input model.UpserBlogData) (*model.BlogResponce, error) {
 	response := controller.UpsertBlogData(ctx, input)
 	return response, nil
+}
+
+func (r *queryResolver) CreateExcelForUser(ctx context.Context) (*model.ExcelUserResponce, error) {
+	responce := controller.CreateExcelForUser(ctx)
+	return responce,nil
 }
 
 func (r *queryResolver) Login(ctx context.Context, input *model.Login) (*model.LoginResponce, error) {
@@ -111,12 +115,3 @@ func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//    it when you're done.
-//  - You have helper methods in this file. Move them out to keep these resolver files clean.
-func (r *queryResolver) FetchMasterData(ctx context.Context) (*model.MasterFetch, error) {
-	panic(fmt.Errorf("not implemented"))
-}

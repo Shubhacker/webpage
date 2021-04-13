@@ -19,7 +19,6 @@ func FetchTableData(ctx context.Context) *model.Fetch {
 
 func FetchToolData(ctx context.Context, input *model.FetchToolsInput) *model.ToolResponceData {
 	var responce model.ToolResponceData
-
 	Filter := mapper.MapFilterForTools(input)
 	FilterMap := mapper.FilterTool(input.Filter)
 	data := postgres.FetchToolDataFromDb(Filter.ID,FilterMap.Filter,FilterMap.FilterColumn)
