@@ -30,6 +30,10 @@ func FetchToolData(ctx context.Context, input *model.FetchToolsInput) *model.Too
 
 func UpsertToolData(ctx context.Context, input model.UpsertTool) *model.UpsertToolResponce {
 	var responce model.UpsertToolResponce
+	AuthRole := auth.GetAuthRole(ctx)
+	if *AuthRole != "developer"{
+		responce.Message = "Developer Permission Require For Action"
+	}
 	mapData := mapper.MapUpsertForTools(input)
 	err := postgres.UpsertToolData(mapData)
 	if err != nil {
@@ -42,6 +46,10 @@ func UpsertToolData(ctx context.Context, input model.UpsertTool) *model.UpsertTo
 
 func UpsertbookData(ctx context.Context, input model.UpsertBook) *model.UpsertBookResponce {
 	var responce model.UpsertBookResponce
+	AuthRole := auth.GetAuthRole(ctx)
+	if *AuthRole != "developer"{
+		responce.Message = "Developer Permission Require For Action"
+	}
 	mapData := mapper.MapUpsertForBooks(input)
 	err := postgres.UpsertbookData(mapData)
 	if err != nil {
@@ -54,6 +62,10 @@ func UpsertbookData(ctx context.Context, input model.UpsertBook) *model.UpsertBo
 
 func UpsertVideoData(ctx context.Context, input model.UpsertVideo) *model.UpsertVideoResponce {
 	var responce model.UpsertVideoResponce
+	AuthRole := auth.GetAuthRole(ctx)
+	if *AuthRole != "developer"{
+		responce.Message = "Developer Permission Require For Action"
+	}
 	mapData := mapper.MapUpsertForVideo(input)
 	err := postgres.UpsertVideo(mapData)
 	if err != nil {
@@ -66,6 +78,10 @@ func UpsertVideoData(ctx context.Context, input model.UpsertVideo) *model.Upsert
 
 func UpdateVideoData(ctx context.Context, input model.UpdateVideo) *model.UpsertVideoResponce {
 	var responce model.UpsertVideoResponce
+	AuthRole := auth.GetAuthRole(ctx)
+	if *AuthRole != "developer"{
+		responce.Message = "Developer Permission Require For Action"
+	}
 	mapData := mapper.MapUpdateForVideo(input)
 	err := postgres.UpdateVideo(mapData)
 	if err != nil {
@@ -78,6 +94,10 @@ func UpdateVideoData(ctx context.Context, input model.UpdateVideo) *model.Upsert
 
 func UpdatebookData(ctx context.Context, input model.UpdateBook) *model.UpsertBookResponce {
 	var responce model.UpsertBookResponce
+	AuthRole := auth.GetAuthRole(ctx)
+	if *AuthRole != "developer"{
+		responce.Message = "Developer Permission Require For Action"
+	}
 	mapData := mapper.MapUpdateForBooks(input)
 	err := postgres.UpdateBookData(mapData)
 	if err != nil {
@@ -90,6 +110,10 @@ func UpdatebookData(ctx context.Context, input model.UpdateBook) *model.UpsertBo
 
 func UpdateToolsData(ctx context.Context, input model.UpdateTools) *model.UpsertToolResponce {
 	var responce model.UpsertToolResponce
+	AuthRole := auth.GetAuthRole(ctx)
+	if *AuthRole != "developer"{
+		responce.Message = "Developer Permission Require For Action"
+	}
 	mapData := mapper.MapUpdateForTools(input)
 	err := postgres.UpdateToolData(mapData)
 	if err != nil {
@@ -103,7 +127,7 @@ func UpdateToolsData(ctx context.Context, input model.UpdateTools) *model.Upsert
 func FetchBookData(ctx context.Context, input *model.FetchBookInput) *model.BookResponce {
 	var responce model.BookResponce
 	AuthRole := auth.GetAuthRole(ctx)
-	if *AuthRole != "developers"{
+	if *AuthRole != "developers" || *AuthRole != "tester"{
 		responce.Error = true
 		responce.Message = "You Do Not Have Permission For Action"
 		responce.Data = nil
@@ -118,6 +142,10 @@ func FetchBookData(ctx context.Context, input *model.FetchBookInput) *model.Book
 
 func UpsertUserData(ctx context.Context, input model.UserUpsert) *model.UserResponce {
 	var responce model.UserResponce
+	AuthRole := auth.GetAuthRole(ctx)
+	if *AuthRole != "developer"{
+		responce.Message = "Developer Permission Require For Action"
+	}
 	mapData := mapper.MapUpsertForUser(input)
 	err := postgres.UpsertUserData(mapData)
 	if err != nil {
@@ -132,6 +160,10 @@ func UpsertUserData(ctx context.Context, input model.UserUpsert) *model.UserResp
 func UpdateUserData(ctx context.Context, input model.UpdateUser) *model.UserResponce {
 	log.Println("UpdateUserData()")
 	var responce model.UserResponce
+	AuthRole := auth.GetAuthRole(ctx)
+	if *AuthRole != "developer"{
+		responce.Message = "Developer Permission Require For Action"
+	}
 	var err error
 	var mapData *entity.UpdateUser
 	mapData, err = mapper.MapUpdateForUser(input)
@@ -159,6 +191,10 @@ func FetchVideoData(ctx context.Context, input *model.FetchVideoInput) *model.Fe
 
 func UpsertBlogData(ctx context.Context, input model.UpserBlogData) *model.BlogResponce {
 	var responce model.BlogResponce
+	AuthRole := auth.GetAuthRole(ctx)
+	if *AuthRole != "developer"{
+		responce.Message = "Developer Permission Require For Action"
+	}
 	mapData := mapper.MapUpsertForBlog(input)
 	err := postgres.UpsertBlogData(mapData)
 	if err != nil {
