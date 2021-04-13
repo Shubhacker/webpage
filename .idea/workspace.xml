@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="b4aeb7f9-0bf4-4852-aefc-f6e320595206" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/controller/insert.go" beforeDir="false" afterPath="$PROJECT_DIR$/graph/controller/insert.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graph/17march2021.sql" beforeDir="false" afterPath="$PROJECT_DIR$/graph/schema/17march2021.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graph/postgres/api_docs.txt" beforeDir="false" afterPath="$PROJECT_DIR$/graph/postgres/api_docs.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
