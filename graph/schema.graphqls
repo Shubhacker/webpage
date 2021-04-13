@@ -42,6 +42,12 @@ type FetchVideo{
 }
 
 type MasterFetch{
+Error: Boolean!
+Message: String!
+Data:[MasterResponce]
+}
+
+type MasterResponce{
 Video:[FetchVideo]
 Tool:[FetchToolData]
 Blog:[FetchBlog]

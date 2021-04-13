@@ -4,9 +4,11 @@
     <list default="true" id="b4aeb7f9-0bf4-4852-aefc-f6e320595206" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/graph/controller/insert.go" beforeDir="false" afterPath="$PROJECT_DIR$/graph/controller/insert.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/entity/entity.go" beforeDir="false" afterPath="$PROJECT_DIR$/graph/entity/entity.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graph/generated/generated.go" beforeDir="false" afterPath="$PROJECT_DIR$/graph/generated/generated.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/graph/mapper/mapping.go" beforeDir="false" afterPath="$PROJECT_DIR$/graph/mapper/mapping.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graph/model/models_gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/graph/model/models_gen.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/graph/postgres/tabledata.go" beforeDir="false" afterPath="$PROJECT_DIR$/graph/postgres/tabledata.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graph/schema.graphqls" beforeDir="false" afterPath="$PROJECT_DIR$/graph/schema.graphqls" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/graph/schema.resolvers.go" beforeDir="false" afterPath="$PROJECT_DIR$/graph/schema.resolvers.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

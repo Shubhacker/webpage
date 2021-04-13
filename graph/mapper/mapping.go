@@ -3,13 +3,11 @@ package mapper
 import (
 	"encoding/json"
 	"errors"
-	"log"
-	"net/http"
-	"strconv"
-
 	"github.com/shubhacker/gqlgen-todos/graph/entity"
 	"github.com/shubhacker/gqlgen-todos/graph/model"
 	"github.com/shubhacker/gqlgen-todos/graph/postgres"
+	"log"
+	"net/http"
 )
 
 func MapFetchData(entity entity.Fetch) *model.Fetch {
@@ -309,18 +307,24 @@ func AuthenticateUserRest() http.HandlerFunc {
 	}
 }
 
-func MapForMaster(input []entity.FetchBlog)string {
-
-	MasterMap := make(map[string][]entity.FetchBlog)
-	videoMap := make(map[string]string)
-	for _, videoName := range input {
-		MasterMap[strconv.Itoa(videoName.VideoId)] = append(MasterMap[strconv.Itoa(videoName.VideoId)], videoName)
-		//video[strconv.Itoa(videoName.VideoId)] = append(video[], videoName.VideoTopic)
+func MapForMaster(input []entity.FetchBlog)[]*model.MasterResponce {
+	var Outer []*model.MasterResponce
+	for _, check := range input{
+		var responce model.MasterResponce
+		VideoData := postgres.FetchVideoData(nil)
+		mapVideoData := MapVideoFetchData(VideoData)
+		BookData := postgres.FetchBookDataFromDb(nil,"","")
+		mapBookData := MapFetchBookData(BookData)
+		ToolData := postgres.FetchToolDataFromDb(nil,"","")
+		mapToolData := MapFetchDataForTools(ToolData)
+		BlogData := postgres.FetchBlogDataFromDb(nil)
+		mapBlogData := MapFetchBlogData(BlogData)
+		responce.Video = mapVideoData
+		responce.Book = mapBookData
+		responce.Tool = mapToolData
+		responce.Blog = mapBlogData
+		log.Println("testing purpose:--->",check)
+		Outer = append(Outer, &responce)
 	}
-	for _,videoData := range MasterMap{
-		inc := 1
-		videoMap = append(MasterMap[strconv.Itoa(inc)],videoData)
-		inc++
-	}
-	return ""
+	return Outer
 }

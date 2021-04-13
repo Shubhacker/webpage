@@ -77,6 +77,12 @@ type FilterBook struct {
 }
 
 type MasterFetch struct {
+	Error   bool              `json:"Error"`
+	Message string            `json:"Message"`
+	Data    []*MasterResponce `json:"Data"`
+}
+
+type MasterResponce struct {
 	Video []*FetchVideo        `json:"Video"`
 	Tool  []*FetchToolData     `json:"Tool"`
 	Blog  []*FetchBlog         `json:"Blog"`

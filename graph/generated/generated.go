@@ -87,6 +87,12 @@ type ComplexityRoot struct {
 	}
 
 	MasterFetch struct {
+		Data    func(childComplexity int) int
+		Error   func(childComplexity int) int
+		Message func(childComplexity int) int
+	}
+
+	MasterResponce struct {
 		Blog  func(childComplexity int) int
 		Book  func(childComplexity int) int
 		Tool  func(childComplexity int) int
@@ -350,33 +356,54 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.FetchVideoResponce.Data(childComplexity), true
 
-	case "MasterFetch.Blog":
-		if e.complexity.MasterFetch.Blog == nil {
+	case "MasterFetch.Data":
+		if e.complexity.MasterFetch.Data == nil {
 			break
 		}
 
-		return e.complexity.MasterFetch.Blog(childComplexity), true
+		return e.complexity.MasterFetch.Data(childComplexity), true
 
-	case "MasterFetch.Book":
-		if e.complexity.MasterFetch.Book == nil {
+	case "MasterFetch.Error":
+		if e.complexity.MasterFetch.Error == nil {
 			break
 		}
 
-		return e.complexity.MasterFetch.Book(childComplexity), true
+		return e.complexity.MasterFetch.Error(childComplexity), true
 
-	case "MasterFetch.Tool":
-		if e.complexity.MasterFetch.Tool == nil {
+	case "MasterFetch.Message":
+		if e.complexity.MasterFetch.Message == nil {
 			break
 		}
 
-		return e.complexity.MasterFetch.Tool(childComplexity), true
+		return e.complexity.MasterFetch.Message(childComplexity), true
 
-	case "MasterFetch.Video":
-		if e.complexity.MasterFetch.Video == nil {
+	case "MasterResponce.Blog":
+		if e.complexity.MasterResponce.Blog == nil {
 			break
 		}
 
-		return e.complexity.MasterFetch.Video(childComplexity), true
+		return e.complexity.MasterResponce.Blog(childComplexity), true
+
+	case "MasterResponce.Book":
+		if e.complexity.MasterResponce.Book == nil {
+			break
+		}
+
+		return e.complexity.MasterResponce.Book(childComplexity), true
+
+	case "MasterResponce.Tool":
+		if e.complexity.MasterResponce.Tool == nil {
+			break
+		}
+
+		return e.complexity.MasterResponce.Tool(childComplexity), true
+
+	case "MasterResponce.Video":
+		if e.complexity.MasterResponce.Video == nil {
+			break
+		}
+
+		return e.complexity.MasterResponce.Video(childComplexity), true
 
 	case "Mutation.UpdateBookData":
 		if e.complexity.Mutation.UpdateBookData == nil {
@@ -738,6 +765,12 @@ type FetchVideo{
 }
 
 type MasterFetch{
+Error: Boolean!
+Message: String!
+Data:[MasterResponce]
+}
+
+type MasterResponce{
 Video:[FetchVideo]
 Tool:[FetchToolData]
 Blog:[FetchBlog]
@@ -1951,7 +1984,7 @@ func (ec *executionContext) _FetchVideoResponce_data(ctx context.Context, field 
 	return ec.marshalOFetchVideo2ᚕᚖgithubᚗcomᚋshubhackerᚋgqlgenᚑtodosᚋgraphᚋmodelᚐFetchVideo(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _MasterFetch_Video(ctx context.Context, field graphql.CollectedField, obj *model.MasterFetch) (ret graphql.Marshaler) {
+func (ec *executionContext) _MasterFetch_Error(ctx context.Context, field graphql.CollectedField, obj *model.MasterFetch) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1960,6 +1993,108 @@ func (ec *executionContext) _MasterFetch_Video(ctx context.Context, field graphq
 	}()
 	fc := &graphql.FieldContext{
 		Object:     "MasterFetch",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Error, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _MasterFetch_Message(ctx context.Context, field graphql.CollectedField, obj *model.MasterFetch) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "MasterFetch",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Message, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _MasterFetch_Data(ctx context.Context, field graphql.CollectedField, obj *model.MasterFetch) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "MasterFetch",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.MasterResponce)
+	fc.Result = res
+	return ec.marshalOMasterResponce2ᚕᚖgithubᚗcomᚋshubhackerᚋgqlgenᚑtodosᚋgraphᚋmodelᚐMasterResponce(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _MasterResponce_Video(ctx context.Context, field graphql.CollectedField, obj *model.MasterResponce) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "MasterResponce",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -1983,7 +2118,7 @@ func (ec *executionContext) _MasterFetch_Video(ctx context.Context, field graphq
 	return ec.marshalOFetchVideo2ᚕᚖgithubᚗcomᚋshubhackerᚋgqlgenᚑtodosᚋgraphᚋmodelᚐFetchVideo(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _MasterFetch_Tool(ctx context.Context, field graphql.CollectedField, obj *model.MasterFetch) (ret graphql.Marshaler) {
+func (ec *executionContext) _MasterResponce_Tool(ctx context.Context, field graphql.CollectedField, obj *model.MasterResponce) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1991,7 +2126,7 @@ func (ec *executionContext) _MasterFetch_Tool(ctx context.Context, field graphql
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "MasterFetch",
+		Object:     "MasterResponce",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -2015,7 +2150,7 @@ func (ec *executionContext) _MasterFetch_Tool(ctx context.Context, field graphql
 	return ec.marshalOFetchToolData2ᚕᚖgithubᚗcomᚋshubhackerᚋgqlgenᚑtodosᚋgraphᚋmodelᚐFetchToolData(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _MasterFetch_Blog(ctx context.Context, field graphql.CollectedField, obj *model.MasterFetch) (ret graphql.Marshaler) {
+func (ec *executionContext) _MasterResponce_Blog(ctx context.Context, field graphql.CollectedField, obj *model.MasterResponce) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2023,7 +2158,7 @@ func (ec *executionContext) _MasterFetch_Blog(ctx context.Context, field graphql
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "MasterFetch",
+		Object:     "MasterResponce",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -2047,7 +2182,7 @@ func (ec *executionContext) _MasterFetch_Blog(ctx context.Context, field graphql
 	return ec.marshalOFetchBlog2ᚕᚖgithubᚗcomᚋshubhackerᚋgqlgenᚑtodosᚋgraphᚋmodelᚐFetchBlog(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _MasterFetch_Book(ctx context.Context, field graphql.CollectedField, obj *model.MasterFetch) (ret graphql.Marshaler) {
+func (ec *executionContext) _MasterResponce_Book(ctx context.Context, field graphql.CollectedField, obj *model.MasterResponce) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2055,7 +2190,7 @@ func (ec *executionContext) _MasterFetch_Book(ctx context.Context, field graphql
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "MasterFetch",
+		Object:     "MasterResponce",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -5139,14 +5274,48 @@ func (ec *executionContext) _MasterFetch(ctx context.Context, sel ast.SelectionS
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("MasterFetch")
+		case "Error":
+			out.Values[i] = ec._MasterFetch_Error(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "Message":
+			out.Values[i] = ec._MasterFetch_Message(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "Data":
+			out.Values[i] = ec._MasterFetch_Data(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var masterResponceImplementors = []string{"MasterResponce"}
+
+func (ec *executionContext) _MasterResponce(ctx context.Context, sel ast.SelectionSet, obj *model.MasterResponce) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, masterResponceImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("MasterResponce")
 		case "Video":
-			out.Values[i] = ec._MasterFetch_Video(ctx, field, obj)
+			out.Values[i] = ec._MasterResponce_Video(ctx, field, obj)
 		case "Tool":
-			out.Values[i] = ec._MasterFetch_Tool(ctx, field, obj)
+			out.Values[i] = ec._MasterResponce_Tool(ctx, field, obj)
 		case "Blog":
-			out.Values[i] = ec._MasterFetch_Blog(ctx, field, obj)
+			out.Values[i] = ec._MasterResponce_Blog(ctx, field, obj)
 		case "Book":
-			out.Values[i] = ec._MasterFetch_Book(ctx, field, obj)
+			out.Values[i] = ec._MasterResponce_Book(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -6573,6 +6742,53 @@ func (ec *executionContext) marshalOMasterFetch2ᚖgithubᚗcomᚋshubhackerᚋg
 		return graphql.Null
 	}
 	return ec._MasterFetch(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOMasterResponce2ᚕᚖgithubᚗcomᚋshubhackerᚋgqlgenᚑtodosᚋgraphᚋmodelᚐMasterResponce(ctx context.Context, sel ast.SelectionSet, v []*model.MasterResponce) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOMasterResponce2ᚖgithubᚗcomᚋshubhackerᚋgqlgenᚑtodosᚋgraphᚋmodelᚐMasterResponce(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
+func (ec *executionContext) marshalOMasterResponce2ᚖgithubᚗcomᚋshubhackerᚋgqlgenᚑtodosᚋgraphᚋmodelᚐMasterResponce(ctx context.Context, sel ast.SelectionSet, v *model.MasterResponce) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._MasterResponce(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOResponceFetchBlog2ᚖgithubᚗcomᚋshubhackerᚋgqlgenᚑtodosᚋgraphᚋmodelᚐResponceFetchBlog(ctx context.Context, sel ast.SelectionSet, v *model.ResponceFetchBlog) graphql.Marshaler {

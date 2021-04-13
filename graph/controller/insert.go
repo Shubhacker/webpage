@@ -22,7 +22,7 @@ func FetchToolData(ctx context.Context, input *model.FetchToolsInput) *model.Too
 
 	Filter := mapper.MapFilterForTools(input)
 	FilterMap := mapper.FilterTool(input.Filter)
-	data := postgres.FetchToolDataFromDb(Filter,FilterMap)
+	data := postgres.FetchToolDataFromDb(Filter.ID,FilterMap.Filter,FilterMap.FilterColumn)
 	mapData := mapper.MapFetchDataForTools(data)
 	responce.Data = mapData
 	return &responce
@@ -110,7 +110,7 @@ func FetchBookData(ctx context.Context, input *model.FetchBookInput) *model.Book
 		return &responce
 	}
 	FilterData := mapper.FilterBook(input.Filter)
-	data := postgres.FetchBookDataFromDb(input,FilterData)
+	data := postgres.FetchBookDataFromDb(input,FilterData.Filter,FilterData.FilterColumn)
 	mapData := mapper.MapFetchBookData(data)
 	responce.Data = mapData
 	return &responce
@@ -194,10 +194,16 @@ mapTest := mapper.MappingLogin(check)
 return mapTest
 }
 
-func MasterAPI() *model.MasterFetch{
+func MasterAPI(ctx context.Context) *model.MasterFetch{
 	var responce model.MasterFetch
+	AuthRole := auth.GetAuthRole(ctx)
+	if *AuthRole != "developers"{
+		responce.Error = true
+		responce.Message= "Only Admin Can Access MasterAPI"
+		return &responce
+	}
 	data := postgres.FetchMasterBlogDataFromDb()
 	Map := mapper.MapForMaster(data)
-	log.Println(Map)
+	responce.Data = Map
 	return &responce
 }

@@ -25,7 +25,7 @@ func FetchTableDataIn() entity.Fetch {
 	return response
 }
 
-func FetchToolDataFromDb(input entity.FilterForTools,Filterentity entity.ToolFilter) []*entity.FetchToolData {
+func FetchToolDataFromDb(input *int,Filter string, FilterColumn string) []*entity.FetchToolData {
 	log.Println("FetchToolDataFromDb()")
 	var response []*entity.FetchToolData
 	if pool == nil {
@@ -33,26 +33,28 @@ func FetchToolDataFromDb(input entity.FilterForTools,Filterentity entity.ToolFil
 	}
 	querystring := `select tool_name , tool_link , is_active from tools where is_active = true`
 	var inputargs []interface{}
-	if input.ID != nil {
-		querystring = querystring + ` tools_id = ?`
-		inputargs = append(inputargs, input.ID)
-	}
-	if &Filterentity.Filter != nil {
-		if Filterentity.Filter == "asc"{
-			order := Filterentity.FilterColumn
-			switch order{
-			case "tool_name":
-				querystring += ` order by tool_name asc`
-			case "tool_link":
-				querystring += ` order by tool_link asc`
-			}
-		}else if Filterentity.Filter == "desc"{
-			order := Filterentity.FilterColumn
-			switch order{
-			case "tool_name":
-				querystring += ` order by tool_name desc`
-			case "tool_link":
-				querystring += ` order by tool_link desc`
+	if &input != nil && Filter != "" && FilterColumn != ""{
+		if &input != nil {
+			querystring = querystring + ` tools_id = ?`
+			inputargs = append(inputargs, input)
+		}
+		if &Filter != nil {
+			if Filter == "asc"{
+				order := FilterColumn
+				switch order{
+				case "tool_name":
+					querystring += ` order by tool_name asc`
+				case "tool_link":
+					querystring += ` order by tool_link asc`
+				}
+			}else if Filter == "desc"{
+				order := FilterColumn
+				switch order{
+				case "tool_name":
+					querystring += ` order by tool_name desc`
+				case "tool_link":
+					querystring += ` order by tool_link desc`
+				}
 			}
 		}
 	}
@@ -274,7 +276,7 @@ func UpdateVideo(entity entity.UpdateVideoData) error {
 	return nil
 }
 
-func FetchBookDataFromDb(input *model.FetchBookInput,Filter entity.FilterForBook) []entity.FetchBook {
+func FetchBookDataFromDb(input *model.FetchBookInput,Filter string, FilterColumn string) []entity.FetchBook {
 	log.Println("FetchBookDataFromDb()")
 	var responce []entity.FetchBook
 	if pool == nil {
@@ -282,29 +284,31 @@ func FetchBookDataFromDb(input *model.FetchBookInput,Filter entity.FilterForBook
 	}
 	var inputargs []interface{}
 	querystring := `select book_name, book_link from book where is_active = true`
-	if input.ID != nil {
-		querystring += ` book_id = ?`
-		inputargs = append(inputargs, input.ID)
-	}
-	if &Filter.Filter != nil{
-		order := Filter.FilterColumn
-		if Filter.Filter == "asc"{
-			switch order{
-			case "book_name":
-				querystring += ` order by book_name asc`
-			case "book_link":
-				querystring += ` order by book_link asc`
-			}
-		}else if Filter.Filter == "desc"{
-			switch order{
-			case "book_name":
-				querystring += ` order by book_name desc`
-			case "book_link":
-				querystring += ` order by book_name desc`
+	if input != nil && Filter != "" && Filter != ""{
+		if input.ID != nil {
+			querystring += ` book_id = ?`
+			inputargs = append(inputargs, input.ID)
+		}
+		if &Filter != nil{
+			order := FilterColumn
+			if Filter == "asc"{
+				switch order{
+				case "book_name":
+					querystring += ` order by book_name asc`
+				case "book_link":
+					querystring += ` order by book_link asc`
+				}
+			}else if Filter == "desc"{
+				switch order{
+				case "book_name":
+					querystring += ` order by book_name desc`
+				case "book_link":
+					querystring += ` order by book_name desc`
+				}
 			}
 		}
-
 	}
+
 	querystring = sqlx.Rebind(sqlx.DOLLAR, querystring)
 	rows, err := pool.Query(context.Background(), querystring, inputargs...)
 	if err != nil {
@@ -453,17 +457,19 @@ func FetchVideoData(input *model.FetchVideoInput) []*entity.FetchVideoData {
 	inner join tools t on t.tools_id = vt.tools_id 
 	where b.is_active = true and t.is_active = true `
 	var inputargs []interface{}
-	if input.VideoID != nil {
-		querystring = querystring + ` and vt.video_id = ?`
-		inputargs = append(inputargs, input.VideoID)
-	}
-	if input.VideoTopic != nil {
-		querystring = querystring + ` and vt.video_topic = ?`
-		inputargs = append(inputargs, input.VideoTopic)
-	}
-	if input.Paid != nil {
-		querystring = querystring + ` and vt.paid = ?`
-		inputargs = append(inputargs, input.Paid)
+	if input != nil{
+		if input.VideoID != nil {
+			querystring = querystring + ` and vt.video_id = ?`
+			inputargs = append(inputargs, input.VideoID)
+		}
+		if input.VideoTopic != nil {
+			querystring = querystring + ` and vt.video_topic = ?`
+			inputargs = append(inputargs, input.VideoTopic)
+		}
+		if input.Paid != nil {
+			querystring = querystring + ` and vt.paid = ?`
+			inputargs = append(inputargs, input.Paid)
+		}
 	}
 	querystring = sqlx.Rebind(sqlx.DOLLAR, querystring)
 	rows, err := pool.Query(context.Background(), querystring, inputargs...)
@@ -551,6 +557,7 @@ func UpsertBlogData(entity entity.UpsertBlog) error {
 
 func FetchBlogDataFromDb(input *model.FetchBlogInput) []entity.FetchBlogData {
 	log.Println("FetchBookDataFromDb()")
+	var inputargs []interface{}
 	var responce []entity.FetchBlogData
 	if pool == nil {
 		pool = GetPool()
@@ -558,9 +565,12 @@ func FetchBlogDataFromDb(input *model.FetchBlogInput) []entity.FetchBlogData {
 	querystring := `select b.blog_text , vt.video_topic , b2.book_name , t.tool_name , b.is_active , b.reference_link from blog b
 inner join book b2 on b2.book_id = b.book_id 
 inner join tools t on t.tools_id = b.tools_id 
-inner join video_table vt on vt.video_id = b.video_id
-where b.blog_id = $1`
-	rows, err := pool.Query(context.Background(), querystring, input.BlogID)
+inner join video_table vt on vt.video_id = b.video_id`
+if input != nil{
+	querystring += ` where b.blog_id = $1`
+	inputargs = append(inputargs, input.BlogID)
+}
+	rows, err := pool.Query(context.Background(), querystring, inputargs...)
 	if err != nil {
 		log.Printf("%s - Error: %s here", err.Error())
 	}
@@ -583,8 +593,8 @@ func FetchMasterBlogDataFromDb() []entity.FetchBlog {
 		pool = GetPool()
 	}
 	querystring := `select b.blog_id ,b.blog_text , vt.video_id ,vt.video_topic , b2.book_id ,b2.book_name , t.tools_id, t.tool_name from blog b
-inner join book b2 on b2.book_id = b.book_id 
-inner join tools t on t.tools_id = b.tools_id 
+inner join book b2 on b2.book_id = b.book_id
+inner join tools t on t.tools_id = b.tools_id
 inner join video_table vt on vt.video_id = b.video_id`
 	rows, err := pool.Query(context.Background(), querystring)
 	if err != nil {
@@ -598,7 +608,6 @@ inner join video_table vt on vt.video_id = b.video_id`
 		}
 		responce = append(responce, entity)
 	}
-	log.Println(responce)
 	return responce
 }
 
