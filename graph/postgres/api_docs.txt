@@ -1,7 +1,21 @@
 Request Structure For FrontEnd
+
+mutation{
 upsert = insert
 update
+}
+query{
 fetch = gather data
+}
+
+query{
+  Login(input:{
+    userName:"dev_1"
+    Password:"check_1233"
+  }){
+    JwtToken
+  }
+}
 
 mutation {
   UpsertToolData(input: { 
@@ -72,25 +86,37 @@ UpdateVideoData(input:{
 }  
 }
 
-
 query{
   FetchBook(input:{
-    ID:3
+    Filter:{
+      Filter:"ASC"
+      FilterColumn:"book_link"
+    }
   }){
-data{
-  book_name
-  bookLink
-}
+    Message
+    Error
+    data{
+      book_name
+      bookLink
+    }
   }
 }
 
 
 query{
-  FetchTool{
-    toolname
+  FetchTool(input:{
+    Filter:{
+    Filter:"asc"
+    FilterColumn:"tool_name"
+    }
+  }){
+    data{
+      toolname
+      toollink
+      is_active
+    }
   }
 }
-
 
 
 # Write your query or mutation here
@@ -147,4 +173,38 @@ FetchVideo(input:{
     status
   }
 }  
+}
+
+query{
+  FetchMasterAPI{
+    Error
+    Message
+    Data{
+       Video{
+      video_link
+      paid
+      videoTopic
+      book_name
+      tool_name
+      status
+    }
+    Tool{
+      toolname
+      toollink
+      is_active
+    }
+    Blog{
+      blogText
+      videotopic
+      bookname
+      toolname
+      referencelink
+      status
+    }
+    Book{
+      book_name
+      bookLink
+    }
+    }
+  }
 }
