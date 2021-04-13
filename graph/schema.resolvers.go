@@ -65,8 +65,11 @@ func (r *queryResolver) Login(ctx context.Context, input *model.Login) (*model.L
 }
 
 func (r *queryResolver) FetchMasterAPI(ctx context.Context) (*model.MasterFetch, error) {
-	panic(fmt.Errorf("not implemented"))
+	//panic(fmt.Errorf("not implemented"))
+	responce := controller.MasterAPI()
+	return responce,nil
 }
+
 
 func (r *queryResolver) FetchTool(ctx context.Context, input *model.FetchToolsInput) (*model.ToolResponceData, error) {
 	response := controller.FetchToolData(ctx, input)

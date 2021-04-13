@@ -107,7 +107,6 @@ func FetchBookData(ctx context.Context, input *model.FetchBookInput) *model.Book
 		responce.Error = true
 		responce.Message = "You Do Not Have Permission For Action"
 		responce.Data = nil
-		log.Println(*AuthRole)
 		return &responce
 	}
 	FilterData := mapper.FilterBook(input.Filter)
@@ -180,13 +179,6 @@ func FetchBlogData(ctx context.Context, input *model.FetchBlogInput) *model.Resp
 	return &responce
 }
 
-//func MasterAPI() *model.MasterFetch{
-//	var responce model.MasterFetch
-//	data := postgres.FetchMasterBlogDataFromDb()
-//	responce.Blog = data
-//}
-
-
 func LoginApi(ctx context.Context, input *model.Login)*model.LoginResponce{
 mapLogin := mapper.MappingForLogin(input)
 //LoginPostgres,err := postgres.AuthenticateUser(mapLogin)
@@ -200,4 +192,12 @@ if err != nil{
 }
 mapTest := mapper.MappingLogin(check)
 return mapTest
+}
+
+func MasterAPI() *model.MasterFetch{
+	var responce model.MasterFetch
+	data := postgres.FetchMasterBlogDataFromDb()
+	Map := mapper.MapForMaster(data)
+	log.Println(Map)
+	return &responce
 }

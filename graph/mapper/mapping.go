@@ -5,6 +5,7 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/shubhacker/gqlgen-todos/graph/entity"
 	"github.com/shubhacker/gqlgen-todos/graph/model"
@@ -306,4 +307,20 @@ func AuthenticateUserRest() http.HandlerFunc {
 			json.NewEncoder(w).Encode(CheckUser)
 		//}
 	}
+}
+
+func MapForMaster(input []entity.FetchBlog)string {
+
+	MasterMap := make(map[string][]entity.FetchBlog)
+	videoMap := make(map[string]string)
+	for _, videoName := range input {
+		MasterMap[strconv.Itoa(videoName.VideoId)] = append(MasterMap[strconv.Itoa(videoName.VideoId)], videoName)
+		//video[strconv.Itoa(videoName.VideoId)] = append(video[], videoName.VideoTopic)
+	}
+	for _,videoData := range MasterMap{
+		inc := 1
+		videoMap = append(MasterMap[strconv.Itoa(inc)],videoData)
+		inc++
+	}
+	return ""
 }

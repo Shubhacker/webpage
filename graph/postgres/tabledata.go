@@ -576,13 +576,13 @@ where b.blog_id = $1`
 }
 
 
-func FetchMasterBlogDataFromDb() []model.FetchBlog {
+func FetchMasterBlogDataFromDb() []entity.FetchBlog {
 	log.Println("FetchBookDataFromDb()")
-	var responce []model.FetchBlog
+	var responce []entity.FetchBlog
 	if pool == nil {
 		pool = GetPool()
 	}
-	querystring := `select b.blog_text , vt.video_topic , b2.book_name , t.tool_name , b.is_active , b.reference_link from blog b
+	querystring := `select b.blog_id ,b.blog_text , vt.video_id ,vt.video_topic , b2.book_id ,b2.book_name , t.tools_id, t.tool_name from blog b
 inner join book b2 on b2.book_id = b.book_id 
 inner join tools t on t.tools_id = b.tools_id 
 inner join video_table vt on vt.video_id = b.video_id`
@@ -591,13 +591,14 @@ inner join video_table vt on vt.video_id = b.video_id`
 		log.Printf("%s - Error: %s here", err.Error())
 	}
 	for rows.Next() {
-		var entity model.FetchBlog
-		err = rows.Scan(&entity.BlogText, &entity.Videotopic, &entity.Bookname, &entity.Toolname, &entity.Status, &entity.Referencelink)
+		var entity entity.FetchBlog
+		err = rows.Scan(&entity.BlogId, &entity.BlogText, &entity.VideoId, &entity.VideoTopic, &entity.BookId, &entity.BookName, &entity.ToolId,  &entity.ToolName)
 		if err != nil {
 			log.Println("%s - Error: %s here 2", err.Error())
 		}
 		responce = append(responce, entity)
 	}
+	log.Println(responce)
 	return responce
 }
 
