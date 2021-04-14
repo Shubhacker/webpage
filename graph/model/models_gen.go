@@ -177,6 +177,11 @@ type LoginResponce struct {
 	JwtToken *string `json:"JwtToken"`
 }
 
+type MasterExcelResponce struct {
+	Error   bool   `json:"Error"`
+	Message string `json:"Message"`
+}
+
 type UpdateUser struct {
 	UserName    string  `json:"user_name"`
 	OldPassword *string `json:"oldPassword"`

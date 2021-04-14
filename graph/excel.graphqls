@@ -1,0 +1,8 @@
+type masterExcelResponce{
+Error: Boolean!
+Message: String!
+}
+
+extend type Query{
+MasterExcelFetch: masterExcelResponce
+}

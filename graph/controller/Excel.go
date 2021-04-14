@@ -6,6 +6,7 @@ import (
 	"context"
 	"github.com/shubhacker/gqlgen-todos/graph/postgres"
 	"github.com/shubhacker/gqlgen-todos/graph/working"
+	"log"
 )
 
 func CreateExcelForUser(ctx context.Context)*model.ExcelUserResponce{
@@ -25,4 +26,21 @@ func CreateExcelForUser(ctx context.Context)*model.ExcelUserResponce{
 	responce.Error = false
 	responce.Message = Excel
 	return &responce
+}
+
+
+func MaterExcelFetch(ctx context.Context)*model.MasterExcelResponce{
+	var responce model.MasterExcelResponce
+	AuthRole := auth.GetAuthRole(ctx)
+	if *AuthRole != "developers"{
+		responce.Error = true
+		responce.Message = "Need Developer Permissiono!"
+	}
+	FetchMasterData := postgres.FetchMasterDataForExcel()
+	//CreateExcel := working.CreateExcelForMaster()
+	log.Println(FetchMasterData)
+	responce.Error = false
+	responce.Message = "Done"
+	return &responce
+
 }

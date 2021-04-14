@@ -125,6 +125,7 @@ type ComplexityRoot struct {
 		FetchTool          func(childComplexity int, input *model.FetchToolsInput) int
 		FetchVideo         func(childComplexity int, input *model.FetchVideoInput) int
 		Login              func(childComplexity int, input *model.Login) int
+		MasterExcelFetch   func(childComplexity int) int
 	}
 
 	ResponceFetchBlog struct {
@@ -160,6 +161,11 @@ type ComplexityRoot struct {
 		JwtToken func(childComplexity int) int
 	}
 
+	MasterExcelResponce struct {
+		Error   func(childComplexity int) int
+		Message func(childComplexity int) int
+	}
+
 	UserResponce struct {
 		Message func(childComplexity int) int
 	}
@@ -177,6 +183,7 @@ type MutationResolver interface {
 	UpsertBlogData(ctx context.Context, input model.UpserBlogData) (*model.BlogResponce, error)
 }
 type QueryResolver interface {
+	MasterExcelFetch(ctx context.Context) (*model.MasterExcelResponce, error)
 	CreateExcelForUser(ctx context.Context) (*model.ExcelUserResponce, error)
 	Login(ctx context.Context, input *model.Login) (*model.LoginResponce, error)
 	FetchMasterAPI(ctx context.Context) (*model.MasterFetch, error)
@@ -615,6 +622,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Login(childComplexity, args["input"].(*model.Login)), true
 
+	case "Query.MasterExcelFetch":
+		if e.complexity.Query.MasterExcelFetch == nil {
+			break
+		}
+
+		return e.complexity.Query.MasterExcelFetch(childComplexity), true
+
 	case "ResponceFetchBlog.data":
 		if e.complexity.ResponceFetchBlog.Data == nil {
 			break
@@ -677,6 +691,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.LoginResponce.JwtToken(childComplexity), true
+
+	case "masterExcelResponce.Error":
+		if e.complexity.MasterExcelResponce.Error == nil {
+			break
+		}
+
+		return e.complexity.MasterExcelResponce.Error(childComplexity), true
+
+	case "masterExcelResponce.Message":
+		if e.complexity.MasterExcelResponce.Message == nil {
+			break
+		}
+
+		return e.complexity.MasterExcelResponce.Message(childComplexity), true
 
 	case "userResponce.message":
 		if e.complexity.UserResponce.Message == nil {
@@ -749,6 +777,14 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
+	{Name: "graph/excel.graphqls", Input: `type masterExcelResponce{
+Error: Boolean!
+Message: String!
+}
+
+extend type Query{
+MasterExcelFetch: masterExcelResponce
+}`, BuiltIn: false},
 	{Name: "graph/schema.graphqls", Input: `type FetchToolData{
     toolname: String
     toollink: String
@@ -2696,6 +2732,38 @@ func (ec *executionContext) _Mutation_UpsertBlogData(ctx context.Context, field 
 	return ec.marshalNblogResponce2ᚖgithubᚗcomᚋshubhackerᚋgqlgenᚑtodosᚋgraphᚋmodelᚐBlogResponce(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_MasterExcelFetch(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().MasterExcelFetch(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.MasterExcelResponce)
+	fc.Result = res
+	return ec.marshalOmasterExcelResponce2ᚖgithubᚗcomᚋshubhackerᚋgqlgenᚑtodosᚋgraphᚋmodelᚐMasterExcelResponce(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query_CreateExcelForUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -4447,6 +4515,76 @@ func (ec *executionContext) _loginResponce_JwtToken(ctx context.Context, field g
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _masterExcelResponce_Error(ctx context.Context, field graphql.CollectedField, obj *model.MasterExcelResponce) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "masterExcelResponce",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Error, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _masterExcelResponce_Message(ctx context.Context, field graphql.CollectedField, obj *model.MasterExcelResponce) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "masterExcelResponce",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Message, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _userResponce_message(ctx context.Context, field graphql.CollectedField, obj *model.UserResponce) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5581,6 +5719,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Query")
+		case "MasterExcelFetch":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_MasterExcelFetch(ctx, field)
+				return res
+			})
 		case "CreateExcelForUser":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -6126,6 +6275,38 @@ func (ec *executionContext) _loginResponce(ctx context.Context, sel ast.Selectio
 			out.Values[i] = graphql.MarshalString("loginResponce")
 		case "JwtToken":
 			out.Values[i] = ec._loginResponce_JwtToken(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var masterExcelResponceImplementors = []string{"masterExcelResponce"}
+
+func (ec *executionContext) _masterExcelResponce(ctx context.Context, sel ast.SelectionSet, obj *model.MasterExcelResponce) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, masterExcelResponceImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("masterExcelResponce")
+		case "Error":
+			out.Values[i] = ec._masterExcelResponce_Error(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "Message":
+			out.Values[i] = ec._masterExcelResponce_Message(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -7202,6 +7383,13 @@ func (ec *executionContext) marshalOloginResponce2ᚖgithubᚗcomᚋshubhacker�
 		return graphql.Null
 	}
 	return ec._loginResponce(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOmasterExcelResponce2ᚖgithubᚗcomᚋshubhackerᚋgqlgenᚑtodosᚋgraphᚋmodelᚐMasterExcelResponce(ctx context.Context, sel ast.SelectionSet, v *model.MasterExcelResponce) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._masterExcelResponce(ctx, sel, v)
 }
 
 // endregion ***************************** type.gotpl *****************************
