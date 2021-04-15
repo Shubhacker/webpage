@@ -197,6 +197,7 @@ input login{
 }
 type loginResponce{
     JwtToken: String
+    Error: Boolean!
 }
 
 type ExcelUserResponce{

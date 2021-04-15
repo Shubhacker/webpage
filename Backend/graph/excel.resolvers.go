@@ -5,8 +5,8 @@ package graph
 
 import (
 	"context"
-	"github.com/shubhacker/gqlgen-todos/graph/controller"
 
+	"github.com/shubhacker/gqlgen-todos/graph/controller"
 	"github.com/shubhacker/gqlgen-todos/graph/generated"
 	"github.com/shubhacker/gqlgen-todos/graph/model"
 )
@@ -20,4 +20,3 @@ func (r *queryResolver) MasterExcelFetch(ctx context.Context) (*model.MasterExce
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
 type queryResolver struct{ *Resolver }
-

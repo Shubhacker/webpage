@@ -158,6 +158,7 @@ type ComplexityRoot struct {
 	}
 
 	LoginResponce struct {
+		Error    func(childComplexity int) int
 		JwtToken func(childComplexity int) int
 	}
 
@@ -685,6 +686,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.BlogResponce.Message(childComplexity), true
 
+	case "loginResponce.Error":
+		if e.complexity.LoginResponce.Error == nil {
+			break
+		}
+
+		return e.complexity.LoginResponce.Error(childComplexity), true
+
 	case "loginResponce.JwtToken":
 		if e.complexity.LoginResponce.JwtToken == nil {
 			break
@@ -984,6 +992,7 @@ input login{
 }
 type loginResponce{
     JwtToken: String
+    Error: Boolean!
 }
 
 type ExcelUserResponce{
@@ -4515,6 +4524,41 @@ func (ec *executionContext) _loginResponce_JwtToken(ctx context.Context, field g
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _loginResponce_Error(ctx context.Context, field graphql.CollectedField, obj *model.LoginResponce) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "loginResponce",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Error, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _masterExcelResponce_Error(ctx context.Context, field graphql.CollectedField, obj *model.MasterExcelResponce) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -6275,6 +6319,11 @@ func (ec *executionContext) _loginResponce(ctx context.Context, sel ast.Selectio
 			out.Values[i] = graphql.MarshalString("loginResponce")
 		case "JwtToken":
 			out.Values[i] = ec._loginResponce_JwtToken(ctx, field, obj)
+		case "Error":
+			out.Values[i] = ec._loginResponce_Error(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

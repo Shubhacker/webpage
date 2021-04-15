@@ -198,7 +198,7 @@ func UpsertVideo(entity entity.VideoData) error {
 		pool = GetPool()
 	}
 
-	querystring := `insert into Video_table (video_link,paid,video_topic,is_active,`
+	querystring := `insert into Video_table (videolink,paid,video_topic,is_active,`
 	var inputargs []interface{}
 	if entity.BookName != "" {
 		querystring += `book_id`
@@ -245,7 +245,7 @@ func UpdateVideo(entity entity.UpdateVideoData) error {
 		querystring += ` ,`
 	}
 	if entity.Video_link != "" {
-		querystring += ` video_link= ?`
+		querystring += ` videolink= ?`
 		inputargs = append(inputargs, entity.Video_link)
 		querystring += ` ,`
 	}
@@ -452,7 +452,7 @@ func FetchVideoData(input *model.FetchVideoInput) []*entity.FetchVideoData {
 	if pool == nil {
 		pool = GetPool()
 	}
-	querystring := `select vt.video_link , vt.paid , vt.is_active , vt.video_topic  , b.book_name , t.tool_name from video_table vt
+	querystring := `select vt.videolink , vt.paid , vt.is_active , vt.video_topic  , b.book_name , t.tool_name from video_table vt
 	inner join book b on b.book_id = vt.book_id 
 	inner join tools t on t.tools_id = vt.tools_id 
 	where b.is_active = true and t.is_active = true `
