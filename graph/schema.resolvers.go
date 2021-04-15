@@ -59,6 +59,11 @@ func (r *mutationResolver) UpsertBlogData(ctx context.Context, input model.Upser
 	return response, nil
 }
 
+func (r *queryResolver) CreateExcelForUser(ctx context.Context) (*model.ExcelUserResponce, error) {
+	responce := controller.CreateExcelForUser(ctx)
+	return responce, nil
+}
+
 func (r *queryResolver) Login(ctx context.Context, input *model.Login) (*model.LoginResponce, error) {
 	login := controller.LoginApi(ctx, input)
 	return login, nil
@@ -105,11 +110,7 @@ func (r *queryResolver) FetchBlog(ctx context.Context, input *model.FetchBlogInp
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
-// Query returns generated.QueryResolver implementation.
-func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
-
 type mutationResolver struct{ *Resolver }
-type queryResolver struct{ *Resolver }
 
 // !!! WARNING !!!
 // The code below was going to be deleted when updating resolvers. It has been copied here so you have

@@ -8,6 +8,11 @@ type BookResponce struct {
 	Data    []*FetchBookResponce `json:"data"`
 }
 
+type ExcelUserResponce struct {
+	Error   bool   `json:"Error"`
+	Message string `json:"Message"`
+}
+
 type Fetch struct {
 	Employeename string `json:"employeename"`
 	Projectename string `json:"projectename"`
@@ -170,6 +175,11 @@ type Login struct {
 
 type LoginResponce struct {
 	JwtToken *string `json:"JwtToken"`
+}
+
+type MasterExcelResponce struct {
+	Error   bool   `json:"Error"`
+	Message string `json:"Message"`
 }
 
 type UpdateUser struct {
