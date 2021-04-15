@@ -175,6 +175,7 @@ type Login struct {
 
 type LoginResponce struct {
 	JwtToken *string `json:"JwtToken"`
+	Error    bool    `json:"Error"`
 }
 
 type MasterExcelResponce struct {

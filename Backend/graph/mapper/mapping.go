@@ -282,6 +282,7 @@ return &entity
 
 func MappingLogin(token string)*model.LoginResponce{
 	userModel := &model.LoginResponce{
+		Error: false,
 		JwtToken: &token,
 	}
 	return userModel
