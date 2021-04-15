@@ -11,7 +11,7 @@ type UserExcel struct{
 type MasterExcel struct{
 	UserName string
 	Password string
-	UserRole int
+	UserRole string
 	Email string
 	MobNo int
 	BlogText string
@@ -20,6 +20,6 @@ type MasterExcel struct{
 	BookLink string
 	ToolName string
 	ToolLink string
-	VideoLinkk string
+	VideoLink string
 	VideoTopic string
 }

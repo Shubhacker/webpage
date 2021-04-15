@@ -37,10 +37,10 @@ func MaterExcelFetch(ctx context.Context)*model.MasterExcelResponce{
 		responce.Message = "Need Developer Permissiono!"
 	}
 	FetchMasterData := postgres.FetchMasterDataForExcel()
-	//CreateExcel := working.CreateExcelForMaster()
+	ExceResponce := working.CreateExcelForMaster(FetchMasterData)
 	log.Println(FetchMasterData)
 	responce.Error = false
-	responce.Message = "Done"
+	responce.Message = ExceResponce
 	return &responce
 
 }

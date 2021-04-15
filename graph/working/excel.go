@@ -40,10 +40,41 @@ if err := f.SaveAs("Test.xlsx");err != nil{
 }
 return "Excel Created"
 }
-func CreateExcelForMaster()string{
+func CreateExcelForMaster(entity []entity.MasterExcel)(string){
 	log.Println("CreateExcelForMaster()")
 	f := excelize.NewFile()
-	index:= f.NewSheet("sheet 1")
-	f.SetActiveSheet(index)
-	return ""
+	op := 1
+	UserSheet:= f.NewSheet("User Sheet")
+	VideoSheet := f.NewSheet("Video Sheet")
+	BlogSheet := f.NewSheet("Blog Sheet")
+	for _,data := range entity{
+		Column1 := "A"+strconv.Itoa(op)
+		Column2 := "B"+strconv.Itoa(op)
+		Column3 := "C"+strconv.Itoa(op)
+		Column4 := "D"+strconv.Itoa(op)
+		Column5 := "E"+strconv.Itoa(op)
+		Column6 := "F"+strconv.Itoa(op)
+		f.SetCellValue("User Sheet",Column1,data.UserName)
+		f.SetCellValue("User Sheet",Column2,data.Password)
+		f.SetCellValue("User Sheet",Column3,data.UserRole)
+		f.SetCellValue("User Sheet",Column4,data.Email)
+		f.SetCellValue("User Sheet",Column5,data.MobNo)
+		f.SetCellValue("Video Sheet",Column1,data.VideoTopic)
+		f.SetCellValue("Video Sheet",Column2,data.VideoLink)
+		f.SetCellValue("Video Sheet",Column3,data.BookName)
+		f.SetCellValue("Video Sheet",Column4,data.BookLink)
+		f.SetCellValue("Video Sheet",Column5,data.ToolName)
+		f.SetCellValue("Video Sheet",Column6,data.VideoLink)
+		f.SetCellValue("Blog Sheet",Column1,data.BlogText)
+		f.SetCellValue("Blog Sheet",Column2,data.ReferenceLink)
+		op += 1
+	}
+
+	f.SetActiveSheet(UserSheet)
+	f.SetActiveSheet(VideoSheet)
+	f.SetActiveSheet(BlogSheet)
+	if err := f.SaveAs("Test.xlsx");err != nil{
+		log.Println(err.Error())
+	}
+	return "Excel Created Successfully"
 }
