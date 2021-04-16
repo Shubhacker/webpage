@@ -14,9 +14,11 @@ class App extends Component{
       return (
           <ApolloProvider client={client}>
           <div id="main">
-              <h1>Shubhacker</h1>
+              <h1>Blogging</h1>
               <BookList> </BookList>
-              <Login></Login>
+          </div>
+          <div id="JWT">
+          <Login></Login>
           </div>
           </ApolloProvider>
       );

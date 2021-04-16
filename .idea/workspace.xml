@@ -1,43 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b4aeb7f9-0bf4-4852-aefc-f6e320595206" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/src.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gqlgen.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/auth/authorize.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/auth/login.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/controller/Excel.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/controller/insert.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/controller/main.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/dev.env" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/entity/entity.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/entity/excel.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/excel.graphqls" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/excel.resolvers.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/generated/generated.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/mapper/mapping.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/model/models_gen.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/pgAdaptor.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/postgres/ExcelDataFetch.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/postgres/FetchMasterExcelData.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/postgres/FieldHelper.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/postgres/User.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/postgres/api_docs.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/postgres/setup.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/postgres/tabledata.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/resolver.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/schema.graphqls" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/schema.resolvers.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/schema/17march2021.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/test.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph/working/excel.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server.go" beforeDir="false" />
-    </list>
+    <list default="true" id="b4aeb7f9-0bf4-4852-aefc-f6e320595206" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -79,7 +43,7 @@
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../eZtrade_backend/src/12537/eZTradeBackendServices/core_planning" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Backend" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">

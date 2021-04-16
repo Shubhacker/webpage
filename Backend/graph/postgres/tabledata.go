@@ -2,11 +2,12 @@ package postgres
 
 import (
 	"context"
+	"log"
+
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/jmoiron/sqlx"
 	"github.com/shubhacker/gqlgen-todos/graph/entity"
 	"github.com/shubhacker/gqlgen-todos/graph/model"
-	"log"
 )
 
 func FetchTableDataIn() entity.Fetch {
@@ -25,7 +26,7 @@ func FetchTableDataIn() entity.Fetch {
 	return response
 }
 
-func FetchToolDataFromDb(input *int,Filter string, FilterColumn string) []*entity.FetchToolData {
+func FetchToolDataFromDb(input *int, Filter string, FilterColumn string) []*entity.FetchToolData {
 	log.Println("FetchToolDataFromDb()")
 	var response []*entity.FetchToolData
 	if pool == nil {
@@ -33,23 +34,23 @@ func FetchToolDataFromDb(input *int,Filter string, FilterColumn string) []*entit
 	}
 	querystring := `select tool_name , tool_link , is_active from tools where is_active = true`
 	var inputargs []interface{}
-	if &input != nil && Filter != "" && FilterColumn != ""{
+	if &input != nil && Filter != "" && FilterColumn != "" {
 		if &input != nil {
 			querystring = querystring + ` tools_id = ?`
 			inputargs = append(inputargs, input)
 		}
 		if &Filter != nil {
-			if Filter == "asc"{
+			if Filter == "asc" {
 				order := FilterColumn
-				switch order{
+				switch order {
 				case "tool_name":
 					querystring += ` order by tool_name asc`
 				case "tool_link":
 					querystring += ` order by tool_link asc`
 				}
-			}else if Filter == "desc"{
+			} else if Filter == "desc" {
 				order := FilterColumn
-				switch order{
+				switch order {
 				case "tool_name":
 					querystring += ` order by tool_name desc`
 				case "tool_link":
@@ -276,7 +277,7 @@ func UpdateVideo(entity entity.UpdateVideoData) error {
 	return nil
 }
 
-func FetchBookDataFromDb(input *model.FetchBookInput,Filter string, FilterColumn string) []entity.FetchBook {
+func FetchBookDataFromDb(input *model.FetchBookInput, Filter string, FilterColumn string) []entity.FetchBook {
 	log.Println("FetchBookDataFromDb()")
 	var responce []entity.FetchBook
 	if pool == nil {
@@ -284,22 +285,22 @@ func FetchBookDataFromDb(input *model.FetchBookInput,Filter string, FilterColumn
 	}
 	var inputargs []interface{}
 	querystring := `select book_name, book_link from book where is_active = true`
-	if input != nil && Filter != "" && Filter != ""{
+	if input != nil && Filter != "" && Filter != "" {
 		if input.ID != nil {
 			querystring += ` book_id = ?`
 			inputargs = append(inputargs, input.ID)
 		}
-		if &Filter != nil{
+		if &Filter != nil {
 			order := FilterColumn
-			if Filter == "asc"{
-				switch order{
+			if Filter == "asc" {
+				switch order {
 				case "book_name":
 					querystring += ` order by book_name asc`
 				case "book_link":
 					querystring += ` order by book_link asc`
 				}
-			}else if Filter == "desc"{
-				switch order{
+			} else if Filter == "desc" {
+				switch order {
 				case "book_name":
 					querystring += ` order by book_name desc`
 				case "book_link":
@@ -457,7 +458,7 @@ func FetchVideoData(input *model.FetchVideoInput) []*entity.FetchVideoData {
 	inner join tools t on t.tools_id = vt.tools_id 
 	where b.is_active = true and t.is_active = true `
 	var inputargs []interface{}
-	if input != nil{
+	if input != nil {
 		if input.VideoID != nil {
 			querystring = querystring + ` and vt.video_id = ?`
 			inputargs = append(inputargs, input.VideoID)
@@ -486,7 +487,6 @@ func FetchVideoData(input *model.FetchVideoInput) []*entity.FetchVideoData {
 	}
 	return response
 }
-
 
 func UpsertBlogData(entity entity.UpsertBlog) error {
 	log.Println("UpsertUserData()")
@@ -554,7 +554,6 @@ func UpsertBlogData(entity entity.UpsertBlog) error {
 	return nil
 }
 
-
 func FetchBlogDataFromDb(input *model.FetchBlogInput) []entity.FetchBlogData {
 	log.Println("FetchBookDataFromDb()")
 	var inputargs []interface{}
@@ -566,10 +565,10 @@ func FetchBlogDataFromDb(input *model.FetchBlogInput) []entity.FetchBlogData {
 inner join book b2 on b2.book_id = b.book_id 
 inner join tools t on t.tools_id = b.tools_id 
 inner join video_table vt on vt.video_id = b.video_id`
-if input != nil{
-	querystring += ` where b.blog_id = $1`
-	inputargs = append(inputargs, input.BlogID)
-}
+	if input != nil {
+		querystring += ` where b.blog_id = $1`
+		inputargs = append(inputargs, input.BlogID)
+	}
 	rows, err := pool.Query(context.Background(), querystring, inputargs...)
 	if err != nil {
 		log.Printf("%s - Error: %s here", err.Error())
@@ -584,7 +583,6 @@ if input != nil{
 	}
 	return responce
 }
-
 
 func FetchMasterBlogDataFromDb() []entity.FetchBlog {
 	log.Println("FetchBookDataFromDb()")
@@ -602,7 +600,7 @@ inner join video_table vt on vt.video_id = b.video_id`
 	}
 	for rows.Next() {
 		var entity entity.FetchBlog
-		err = rows.Scan(&entity.BlogId, &entity.BlogText, &entity.VideoId, &entity.VideoTopic, &entity.BookId, &entity.BookName, &entity.ToolId,  &entity.ToolName)
+		err = rows.Scan(&entity.BlogId, &entity.BlogText, &entity.VideoId, &entity.VideoTopic, &entity.BookId, &entity.BookName, &entity.ToolId, &entity.ToolName)
 		if err != nil {
 			log.Println("%s - Error: %s here 2", err.Error())
 		}
@@ -610,7 +608,6 @@ inner join video_table vt on vt.video_id = b.video_id`
 	}
 	return responce
 }
-
 
 func UserCheck() *entity.UserCheck {
 	log.Println("FetchBookDataFromDb()")
@@ -621,7 +618,7 @@ func UserCheck() *entity.UserCheck {
 	querystring := `select ut.user_name, ut."password" , ur.user_role from user_table ut 
 inner join user_role ur on ur.role_id = ut.user_role 
 where ut.user_name = 'shubham'`
-	 err := pool.QueryRow(context.Background(), querystring).Scan(&entity.UserName,&entity.Password ,&entity.UserRole)
+	err := pool.QueryRow(context.Background(), querystring).Scan(&entity.UserName, &entity.Password, &entity.UserRole)
 	if err != nil {
 		log.Printf("%s - Error: %s here", err.Error())
 	}
