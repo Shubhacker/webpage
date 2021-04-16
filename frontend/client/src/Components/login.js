@@ -22,21 +22,10 @@ class login extends Component{
         if(front.loading){
             return (<div>Loading Token...</div>);
         }else{
-            return front.Login.JwtToken
+            sessionStorage.setItem("userSessionKey", front.Login.JwtToken);
+            // return front.Login.JwtToken
         }
     }
-    // displayVideoTopic(){
-    //     var front = this.props.data
-    //     if(front.loading){
-    //         return (<div>Loading Video...</div>);
-    //     }else{
-    //         return front.FetchVideo.data.map(book => {
-    //             return(
-    //                 <li>{book.videoTopic}</li>
-    //             );
-    //         })
-    //     }
-    // }
     render()
     {
         return (
