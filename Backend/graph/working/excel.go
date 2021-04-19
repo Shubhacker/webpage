@@ -45,6 +45,13 @@ func CreateExcelForMaster(entity []entity.MasterExcel) string {
 	key1 := 0
 	key2 := 0
 	key3 := 0
+	Column1 := "A" + strconv.Itoa(op)
+	Column2 := "B" + strconv.Itoa(op)
+	Column3 := "C" + strconv.Itoa(op)
+	Column4 := "D" + strconv.Itoa(op)
+	Column5 := "E" + strconv.Itoa(op)
+	Column6 := "F" + strconv.Itoa(op)
+
 	Username := make(map[int]string)
 	Password := make(map[int]string)
 	UserRole := make(map[int]string)
@@ -61,6 +68,23 @@ func CreateExcelForMaster(entity []entity.MasterExcel) string {
 	UserSheet := f.NewSheet("User Sheet")
 	VideoSheet := f.NewSheet("Video Sheet")
 	BlogSheet := f.NewSheet("Blog Sheet")
+
+	f.SetCellValue("User Sheet", Column1, "UserName")
+	f.SetCellValue("User Sheet", Column2, "PassWord")
+	f.SetCellValue("User Sheet", Column3, "UserRole")
+	f.SetCellValue("User Sheet", Column4, "Email")
+	f.SetCellValue("User Sheet", Column5, "Mobile No")
+
+	f.SetCellValue("Video Sheet", Column1, "Video Topic")
+	f.SetCellValue("Video Sheet", Column2, "Video Link")
+	f.SetCellValue("Video Sheet", Column3, "Book Name")
+	f.SetCellValue("Video Sheet", Column4, "Book Link")
+	f.SetCellValue("Video Sheet", Column5, "Tool Name")
+	f.SetCellValue("Video Sheet", Column6, "Tool Link")
+
+	f.SetCellValue("Blog Sheet", Column1, "Blog Text")
+	f.SetCellValue("Blog Sheet", Column2, "Reference Link")
+
 	for _, maping := range entity {
 		if maping.UserName != "" {
 			Username[key1] = maping.UserName
@@ -91,40 +115,51 @@ func CreateExcelForMaster(entity []entity.MasterExcel) string {
 		}
 
 	}
-	for key := range Username {
-		Column1 := "A" + strconv.Itoa(op)
-		Column2 := "B" + strconv.Itoa(op)
-		Column3 := "C" + strconv.Itoa(op)
-		Column4 := "D" + strconv.Itoa(op)
-		Column5 := "E" + strconv.Itoa(op)
-		f.SetCellValue("User Sheet", Column1, Username[key])
-		f.SetCellValue("User Sheet", Column2, Password[key])
-		f.SetCellValue("User Sheet", Column3, UserRole[key])
-		f.SetCellValue("User Sheet", Column4, Email[key])
-		f.SetCellValue("User Sheet", Column5, Mob[key])
+	key1 = 0
+	op = 3
+	for _ = range Username {
+		Column1 = "A" + strconv.Itoa(op)
+		Column2 = "B" + strconv.Itoa(op)
+		Column3 = "C" + strconv.Itoa(op)
+		Column4 = "D" + strconv.Itoa(op)
+		Column5 = "E" + strconv.Itoa(op)
+
+		f.SetCellValue("User Sheet", Column1, Username[key1])
+		f.SetCellValue("User Sheet", Column2, Password[key1])
+		f.SetCellValue("User Sheet", Column3, UserRole[key1])
+		f.SetCellValue("User Sheet", Column4, Email[key1])
+		f.SetCellValue("User Sheet", Column5, Mob[key1])
 		op += 1
+		key1 += 1
 	}
-	for key := range VideoTopic {
-		Column1 := "A" + strconv.Itoa(op)
-		Column2 := "B" + strconv.Itoa(op)
-		Column3 := "C" + strconv.Itoa(op)
-		Column4 := "D" + strconv.Itoa(op)
-		Column5 := "E" + strconv.Itoa(op)
-		Column6 := "F" + strconv.Itoa(op)
-		f.SetCellValue("Video Sheet", Column1, VideoTopic[key])
-		f.SetCellValue("Video Sheet", Column2, VideoLink[key])
-		f.SetCellValue("Video Sheet", Column3, Book[key])
-		f.SetCellValue("Video Sheet", Column4, BookLink[key])
-		f.SetCellValue("Video Sheet", Column5, Tool[key])
-		f.SetCellValue("Video Sheet", Column6, ToolLink[key])
+	key2 = 0
+	op = 3
+	for _ = range VideoTopic {
+		Column1 = "A" + strconv.Itoa(op)
+		Column2 = "B" + strconv.Itoa(op)
+		Column3 = "C" + strconv.Itoa(op)
+		Column4 = "D" + strconv.Itoa(op)
+		Column5 = "E" + strconv.Itoa(op)
+		Column6 = "F" + strconv.Itoa(op)
+
+		f.SetCellValue("Video Sheet", Column1, VideoTopic[key2])
+		f.SetCellValue("Video Sheet", Column2, VideoLink[key2])
+		f.SetCellValue("Video Sheet", Column3, Book[key2])
+		f.SetCellValue("Video Sheet", Column4, BookLink[key2])
+		f.SetCellValue("Video Sheet", Column5, Tool[key2])
+		f.SetCellValue("Video Sheet", Column6, ToolLink[key2])
 		op += 1
+		key2 += 1
 	}
-	for key := range BlogText {
-		Column1 := "A" + strconv.Itoa(op)
-		Column2 := "B" + strconv.Itoa(op)
-		f.SetCellValue("Blog Sheet", Column1, BlogText[key])
-		f.SetCellValue("Blog Sheet", Column2, Reference[key])
+	key3 = 0
+	op = 3
+	for _ = range BlogText {
+		Column1 = "A" + strconv.Itoa(op)
+		Column2 = "B" + strconv.Itoa(op)
+		f.SetCellValue("Blog Sheet", Column1, BlogText[key3])
+		f.SetCellValue("Blog Sheet", Column2, Reference[key3])
 		op += 1
+		key3 += 1
 	}
 
 	f.SetActiveSheet(UserSheet)
