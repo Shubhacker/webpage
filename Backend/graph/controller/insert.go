@@ -2,8 +2,9 @@ package controller
 
 import (
 	"context"
-	"github.com/shubhacker/gqlgen-todos/graph/auth"
 	"log"
+
+	"github.com/shubhacker/gqlgen-todos/graph/auth"
 
 	"github.com/shubhacker/gqlgen-todos/graph/entity"
 	"github.com/shubhacker/gqlgen-todos/graph/mapper"
@@ -21,7 +22,7 @@ func FetchToolData(ctx context.Context, input *model.FetchToolsInput) *model.Too
 	var responce model.ToolResponceData
 	Filter := mapper.MapFilterForTools(input)
 	FilterMap := mapper.FilterTool(input.Filter)
-	data := postgres.FetchToolDataFromDb(Filter.ID,FilterMap.Filter,FilterMap.FilterColumn)
+	data := postgres.FetchToolDataFromDb(Filter.ID, FilterMap.Filter, FilterMap.FilterColumn)
 	mapData := mapper.MapFetchDataForTools(data)
 	responce.Data = mapData
 	return &responce
@@ -30,7 +31,7 @@ func FetchToolData(ctx context.Context, input *model.FetchToolsInput) *model.Too
 func UpsertToolData(ctx context.Context, input model.UpsertTool) *model.UpsertToolResponce {
 	var responce model.UpsertToolResponce
 	AuthRole := auth.GetAuthRole(ctx)
-	if *AuthRole != "developer"{
+	if *AuthRole != "developer" {
 		responce.Message = "Developer Permission Require For Action"
 	}
 	mapData := mapper.MapUpsertForTools(input)
@@ -46,7 +47,7 @@ func UpsertToolData(ctx context.Context, input model.UpsertTool) *model.UpsertTo
 func UpsertbookData(ctx context.Context, input model.UpsertBook) *model.UpsertBookResponce {
 	var responce model.UpsertBookResponce
 	AuthRole := auth.GetAuthRole(ctx)
-	if *AuthRole != "developer"{
+	if *AuthRole != "developer" {
 		responce.Message = "Developer Permission Require For Action"
 	}
 	mapData := mapper.MapUpsertForBooks(input)
@@ -62,7 +63,7 @@ func UpsertbookData(ctx context.Context, input model.UpsertBook) *model.UpsertBo
 func UpsertVideoData(ctx context.Context, input model.UpsertVideo) *model.UpsertVideoResponce {
 	var responce model.UpsertVideoResponce
 	AuthRole := auth.GetAuthRole(ctx)
-	if *AuthRole != "developer"{
+	if *AuthRole != "developer" {
 		responce.Message = "Developer Permission Require For Action"
 	}
 	mapData := mapper.MapUpsertForVideo(input)
@@ -78,7 +79,7 @@ func UpsertVideoData(ctx context.Context, input model.UpsertVideo) *model.Upsert
 func UpdateVideoData(ctx context.Context, input model.UpdateVideo) *model.UpsertVideoResponce {
 	var responce model.UpsertVideoResponce
 	AuthRole := auth.GetAuthRole(ctx)
-	if *AuthRole != "developer"{
+	if *AuthRole != "developer" {
 		responce.Message = "Developer Permission Require For Action"
 	}
 	mapData := mapper.MapUpdateForVideo(input)
@@ -94,7 +95,7 @@ func UpdateVideoData(ctx context.Context, input model.UpdateVideo) *model.Upsert
 func UpdatebookData(ctx context.Context, input model.UpdateBook) *model.UpsertBookResponce {
 	var responce model.UpsertBookResponce
 	AuthRole := auth.GetAuthRole(ctx)
-	if *AuthRole != "developer"{
+	if *AuthRole != "developer" {
 		responce.Message = "Developer Permission Require For Action"
 	}
 	mapData := mapper.MapUpdateForBooks(input)
@@ -110,7 +111,7 @@ func UpdatebookData(ctx context.Context, input model.UpdateBook) *model.UpsertBo
 func UpdateToolsData(ctx context.Context, input model.UpdateTools) *model.UpsertToolResponce {
 	var responce model.UpsertToolResponce
 	AuthRole := auth.GetAuthRole(ctx)
-	if *AuthRole != "developer"{
+	if *AuthRole != "developer" {
 		responce.Message = "Developer Permission Require For Action"
 	}
 	mapData := mapper.MapUpdateForTools(input)
@@ -126,14 +127,14 @@ func UpdateToolsData(ctx context.Context, input model.UpdateTools) *model.Upsert
 func FetchBookData(ctx context.Context, input *model.FetchBookInput) *model.BookResponce {
 	var responce model.BookResponce
 	AuthRole := auth.GetAuthRole(ctx)
-	if *AuthRole != "developers" || *AuthRole != "tester"{
+	if *AuthRole != "developers" || *AuthRole != "tester" {
 		responce.Error = true
 		responce.Message = "You Do Not Have Permission For Action"
 		responce.Data = nil
 		return &responce
 	}
 	FilterData := mapper.FilterBook(input.Filter)
-	data := postgres.FetchBookDataFromDb(input,FilterData.Filter,FilterData.FilterColumn)
+	data := postgres.FetchBookDataFromDb(input, FilterData.Filter, FilterData.FilterColumn)
 	mapData := mapper.MapFetchBookData(data)
 	responce.Data = mapData
 	return &responce
@@ -142,7 +143,7 @@ func FetchBookData(ctx context.Context, input *model.FetchBookInput) *model.Book
 func UpsertUserData(ctx context.Context, input model.UserUpsert) *model.UserResponce {
 	var responce model.UserResponce
 	AuthRole := auth.GetAuthRole(ctx)
-	if *AuthRole != "developer"{
+	if *AuthRole != "developer" {
 		responce.Message = "Developer Permission Require For Action"
 	}
 	mapData := mapper.MapUpsertForUser(input)
@@ -160,7 +161,7 @@ func UpdateUserData(ctx context.Context, input model.UpdateUser) *model.UserResp
 	log.Println("UpdateUserData()")
 	var responce model.UserResponce
 	AuthRole := auth.GetAuthRole(ctx)
-	if *AuthRole != "developer"{
+	if *AuthRole != "developer" {
 		responce.Message = "Developer Permission Require For Action"
 	}
 	var err error
@@ -191,7 +192,7 @@ func FetchVideoData(ctx context.Context, input *model.FetchVideoInput) *model.Fe
 func UpsertBlogData(ctx context.Context, input model.UpserBlogData) *model.BlogResponce {
 	var responce model.BlogResponce
 	AuthRole := auth.GetAuthRole(ctx)
-	if *AuthRole != "developer"{
+	if *AuthRole != "developer" {
 		responce.Message = "Developer Permission Require For Action"
 	}
 	mapData := mapper.MapUpsertForBlog(input)
@@ -214,27 +215,28 @@ func FetchBlogData(ctx context.Context, input *model.FetchBlogInput) *model.Resp
 	return &responce
 }
 
-func LoginApi(ctx context.Context, input *model.Login)*model.LoginResponce{
-mapLogin := mapper.MappingForLogin(input)
-//LoginPostgres,err := postgres.AuthenticateUser(mapLogin)
+func LoginApi(ctx context.Context, input *model.Login) *model.LoginResponce {
+	mapLogin := mapper.MappingForLogin(input)
+	//LoginPostgres,err := postgres.AuthenticateUser(mapLogin)
+	// postgres.TokenRegeneration()
 	AuthRole := postgres.AuthRoleForUser(mapLogin.UserName)
-	check,err := auth.GenerateJWT(mapLogin.UserName, mapLogin.Password,AuthRole)
-	if err!= nil{
+	check, err := auth.GenerateJWT(mapLogin.UserName, mapLogin.Password, AuthRole)
+	if err != nil {
 		log.Println("error in creating JWT Token!")
 	}
-if err != nil{
-	log.Println("Error in Authenticate!")
-}
-mapTest := mapper.MappingLogin(check)
-return mapTest
+	if err != nil {
+		log.Println("Error in Authenticate!")
+	}
+	mapTest := mapper.MappingLogin(check)
+	return mapTest
 }
 
-func MasterAPI(ctx context.Context) *model.MasterFetch{
+func MasterAPI(ctx context.Context) *model.MasterFetch {
 	var responce model.MasterFetch
 	AuthRole := auth.GetAuthRole(ctx)
-	if *AuthRole != "developers"{
+	if *AuthRole != "developers" {
 		responce.Error = true
-		responce.Message= "Only Admin Can Access MasterAPI"
+		responce.Message = "Only Admin Can Access MasterAPI"
 		return &responce
 	}
 	data := postgres.FetchMasterBlogDataFromDb()

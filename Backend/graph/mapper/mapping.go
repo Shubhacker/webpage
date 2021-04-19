@@ -3,11 +3,12 @@ package mapper
 import (
 	"encoding/json"
 	"errors"
+	"log"
+	"net/http"
+
 	"github.com/shubhacker/gqlgen-todos/graph/entity"
 	"github.com/shubhacker/gqlgen-todos/graph/model"
 	"github.com/shubhacker/gqlgen-todos/graph/postgres"
-	"log"
-	"net/http"
 )
 
 func MapFetchData(entity entity.Fetch) *model.Fetch {
@@ -18,39 +19,39 @@ func MapFetchData(entity entity.Fetch) *model.Fetch {
 	return &out
 }
 
-func MapFilterForTools(input *model.FetchToolsInput) entity.FilterForTools{
+func MapFilterForTools(input *model.FetchToolsInput) entity.FilterForTools {
 	log.Println("MapFilterForTools()")
 	var responce entity.FilterForTools
-	if input.ID != nil{
+	if input.ID != nil {
 		responce.ID = input.ID
 	}
-return responce
+	return responce
 }
 
-func FilterBook(input []*model.FilterBook)entity.FilterForBook{
+func FilterBook(input []*model.FilterBook) entity.FilterForBook {
 	log.Println("FilterBook()")
-var entity entity.FilterForBook
-for _,filter := range input{
-	if filter.Filter != nil{
-		if *filter.Filter == "ASC"{
-			entity.Filter = "asc"
-		}else if *filter.Filter == "DESC"{
-			entity.Filter = "desc"
+	var entity entity.FilterForBook
+	for _, filter := range input {
+		if filter.Filter != nil {
+			if *filter.Filter == "ASC" {
+				entity.Filter = "asc"
+			} else if *filter.Filter == "DESC" {
+				entity.Filter = "desc"
+			}
 		}
+		entity.FilterColumn = *filter.FilterColumn
 	}
-	entity.FilterColumn = *filter.FilterColumn
-}
-return entity
+	return entity
 }
 
-func FilterTool(tool []*model.FetchTool) entity.ToolFilter{
+func FilterTool(tool []*model.FetchTool) entity.ToolFilter {
 	log.Println("FilterTool()")
-	 var entity entity.ToolFilter
-	 for _,input := range tool{
-		 	entity.Filter = *input.Filter
-		 	entity.FilterColumn = *input.FilterColumn
-	 }
-	 return entity
+	var entity entity.ToolFilter
+	for _, input := range tool {
+		entity.Filter = *input.Filter
+		entity.FilterColumn = *input.FilterColumn
+	}
+	return entity
 }
 
 func MapFetchDataForTools(tools []*entity.FetchToolData) []*model.FetchToolData {
@@ -238,19 +239,19 @@ func MapUpsertForBlog(input model.UpserBlogData) entity.UpsertBlog {
 	log.Println("MapUpsertForBlog()")
 	var data entity.UpsertBlog
 	data.BlogText = input.BlogText
-	if input.Bookname != nil{
+	if input.Bookname != nil {
 		data.Bookname = *input.Bookname
 	}
-	if input.Referencelink != nil{
+	if input.Referencelink != nil {
 		data.Referencelink = *input.Referencelink
 	}
-	if input.Status != nil{
+	if input.Status != nil {
 		data.Status = *input.Status
 	}
-	if input.Toolname != nil{
+	if input.Toolname != nil {
 		data.Toolname = *input.Toolname
 	}
-	if input.Videotopic != nil{
+	if input.Videotopic != nil {
 		data.Videotopic = *input.Videotopic
 	}
 	return data
@@ -273,16 +274,16 @@ func MapFetchBlogData(input []entity.FetchBlogData) []*model.FetchBlog {
 	return out
 }
 
-func MappingForLogin(input *model.Login) *entity.Login{
-var entity entity.Login
-entity.UserName = *input.UserName
-entity.Password = *input.Password
-return &entity
+func MappingForLogin(input *model.Login) *entity.Login {
+	var entity entity.Login
+	entity.UserName = *input.UserName
+	entity.Password = *input.Password
+	return &entity
 }
 
-func MappingLogin(token string)*model.LoginResponce{
+func MappingLogin(token string) *model.LoginResponce {
 	userModel := &model.LoginResponce{
-		Error: false,
+		Error:    false,
 		JwtToken: &token,
 	}
 	return userModel
@@ -303,20 +304,20 @@ func AuthenticateUserRest() http.HandlerFunc {
 		//	w.WriteHeader(http.StatusUnauthorized)
 		//	json.NewEncoder(w).Encode(userResponse)
 		//} else {
-			json.NewEncoder(w).Encode(CheckUser)
+		json.NewEncoder(w).Encode(CheckUser)
 		//}
 	}
 }
 
-func MapForMaster(input []entity.FetchBlog)[]*model.MasterResponce {
+func MapForMaster(input []entity.FetchBlog) []*model.MasterResponce {
 	var Outer []*model.MasterResponce
-	for _, check := range input{
+	for _, check := range input {
 		var responce model.MasterResponce
 		VideoData := postgres.FetchVideoData(nil)
 		mapVideoData := MapVideoFetchData(VideoData)
-		BookData := postgres.FetchBookDataFromDb(nil,"","")
+		BookData := postgres.FetchBookDataFromDb(nil, "", "")
 		mapBookData := MapFetchBookData(BookData)
-		ToolData := postgres.FetchToolDataFromDb(nil,"","")
+		ToolData := postgres.FetchToolDataFromDb(nil, "", "")
 		mapToolData := MapFetchDataForTools(ToolData)
 		BlogData := postgres.FetchBlogDataFromDb(nil)
 		mapBlogData := MapFetchBlogData(BlogData)
@@ -324,7 +325,7 @@ func MapForMaster(input []entity.FetchBlog)[]*model.MasterResponce {
 		responce.Book = mapBookData
 		responce.Tool = mapToolData
 		responce.Blog = mapBlogData
-		log.Println("testing purpose:--->",check)
+		log.Println("testing purpose:--->", check)
 		Outer = append(Outer, &responce)
 	}
 	return Outer
