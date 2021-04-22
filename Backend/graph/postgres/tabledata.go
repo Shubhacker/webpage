@@ -209,7 +209,7 @@ func UpsertVideo(entity entity.VideoData) error {
 		querystring += ` tools_id`
 		querystring += ` ,`
 	}
-	querystring += ` date_created) VALUES 
+	querystring += ` date_created,created_by) VALUES 
 	(?, ?, ?,?,  `
 	inputargs = append(inputargs, entity.Video_link, entity.Paid, entity.Video_Topic, entity.Active)
 	if entity.BookName != "" {
@@ -222,8 +222,8 @@ func UpsertVideo(entity entity.VideoData) error {
 		inputargs = append(inputargs, entity.ToolName)
 		querystring += ` ,`
 	}
-	querystring += ` (select current_timestamp))`
-
+	querystring += ` (select current_timestamp),?)`
+	inputargs = append(inputargs, entity.UserName)
 	querystring = sqlx.Rebind(sqlx.DOLLAR, querystring)
 	_, err := pool.Query(context.Background(), querystring, inputargs...)
 	if err != nil {
@@ -237,9 +237,9 @@ func UpdateVideo(entity entity.UpdateVideoData) error {
 	if pool == nil {
 		pool = GetPool()
 	}
-
-	querystring := `update Video_table set `
 	var inputargs []interface{}
+	querystring := `update Video_table set modified_by = ? ,`
+	inputargs = append(inputargs, entity.Modified_By)
 	if entity.Video_Topic != "" {
 		querystring += ` video_topic= ?`
 		inputargs = append(inputargs, entity.Video_Topic)
@@ -266,9 +266,7 @@ func UpdateVideo(entity entity.UpdateVideoData) error {
 		querystring += ` ,`
 	}
 	querystring += `is_active = true where video_id= ?`
-	log.Println("querystring-->", querystring)
 	inputargs = append(inputargs, entity.ID)
-	log.Println("inputargs->", inputargs)
 	querystring = sqlx.Rebind(sqlx.DOLLAR, querystring)
 	_, err := pool.Query(context.Background(), querystring, inputargs...)
 	if err != nil {
@@ -372,6 +370,22 @@ func UpsertUserData(entity entity.UpsertUser) error {
 		return err
 	}
 	return nil
+}
+
+func UserNameExist(UserName string) bool {
+	functionName := "UserNameExist()"
+	log.Println(functionName)
+	if pool == nil {
+		pool = GetPool()
+	}
+	var result bool
+	querystring := `select 1 from user_table ut where ut.user_name = $1`
+	var hasValue int
+	err := pool.QueryRow(context.Background(), querystring, UserName).Scan(&hasValue)
+	if err == nil {
+		result = true
+	}
+	return result
 }
 
 func IsPasswordRight(UserName string, Password string) bool {

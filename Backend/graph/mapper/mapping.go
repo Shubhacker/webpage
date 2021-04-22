@@ -1,11 +1,13 @@
 package mapper
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"log"
 	"net/http"
 
+	"github.com/shubhacker/gqlgen-todos/graph/auth"
 	"github.com/shubhacker/gqlgen-todos/graph/entity"
 	"github.com/shubhacker/gqlgen-todos/graph/model"
 	"github.com/shubhacker/gqlgen-todos/graph/postgres"
@@ -85,10 +87,12 @@ func MapUpsertForBooks(input model.UpsertBook) entity.Bookupsert {
 	return data
 }
 
-func MapUpsertForVideo(input model.UpsertVideo) entity.VideoData {
+func MapUpsertForVideo(input model.UpsertVideo, ctx context.Context) entity.VideoData {
 	log.Println("MapUpsertForVideo()")
 	var data entity.VideoData
+	Username := auth.GetUserName(ctx)
 	data.Video_link = input.VideoLink
+	data.UserName = *Username
 	data.Video_Topic = input.VideoTopic
 	data.Active = input.Status
 	data.Paid = input.Paid
@@ -117,10 +121,12 @@ func MapUpsertForUser(input model.UserUpsert) entity.UpsertUser {
 	return data
 }
 
-func MapUpdateForVideo(input model.UpdateVideo) entity.UpdateVideoData {
+func MapUpdateForVideo(input model.UpdateVideo, ctx context.Context) entity.UpdateVideoData {
 	log.Println("MapUpdateForVideo()")
 	var data entity.UpdateVideoData
 	data.ID = input.VideoID
+	UserName := auth.GetUserName(ctx)
+	data.Modified_By = *UserName
 	if input.VideoTopic != nil {
 		data.Video_Topic = *input.VideoTopic
 	}
@@ -281,10 +287,14 @@ func MappingForLogin(input *model.Login) *entity.Login {
 	return &entity
 }
 
-func MappingLogin(token string) *model.LoginResponce {
+func MappingLogin(token string, entity entity.UserData) *model.LoginResponce {
 	userModel := &model.LoginResponce{
 		Error:    false,
 		JwtToken: &token,
+		UserName: &entity.UserName,
+		Email:    &entity.Email,
+		MobNo:    &entity.MobNo,
+		UserRole: &entity.UserRole,
 	}
 	return userModel
 }

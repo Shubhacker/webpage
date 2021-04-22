@@ -66,7 +66,7 @@ func UpsertVideoData(ctx context.Context, input model.UpsertVideo) *model.Upsert
 	if *AuthRole != "developer" {
 		responce.Message = "Developer Permission Require For Action"
 	}
-	mapData := mapper.MapUpsertForVideo(input)
+	mapData := mapper.MapUpsertForVideo(input, ctx)
 	err := postgres.UpsertVideo(mapData)
 	if err != nil {
 		responce.Message = "Error Upserting Video"
@@ -82,7 +82,7 @@ func UpdateVideoData(ctx context.Context, input model.UpdateVideo) *model.Upsert
 	if *AuthRole != "developer" {
 		responce.Message = "Developer Permission Require For Action"
 	}
-	mapData := mapper.MapUpdateForVideo(input)
+	mapData := mapper.MapUpdateForVideo(input, ctx)
 	err := postgres.UpdateVideo(mapData)
 	if err != nil {
 		responce.Message = "Error Updating Video"
@@ -143,8 +143,13 @@ func FetchBookData(ctx context.Context, input *model.FetchBookInput) *model.Book
 func UpsertUserData(ctx context.Context, input model.UserUpsert) *model.UserResponce {
 	var responce model.UserResponce
 	AuthRole := auth.GetAuthRole(ctx)
-	if *AuthRole != "developer" {
+	if *AuthRole != "developers" {
 		responce.Message = "Developer Permission Require For Action"
+		return &responce
+	}
+	if postgres.UserNameExist(input.UserName) {
+		responce.Message = "UserName Already Exist"
+		return &responce
 	}
 	mapData := mapper.MapUpsertForUser(input)
 	err := postgres.UpsertUserData(mapData)
@@ -227,7 +232,11 @@ func LoginApi(ctx context.Context, input *model.Login) *model.LoginResponce {
 	if err != nil {
 		log.Println("Error in Authenticate!")
 	}
-	mapTest := mapper.MappingLogin(check)
+	UserData, err := postgres.FetchUserForLogin(*input.UserName)
+	if err != nil {
+		log.Println("Error In User Data Fetching")
+	}
+	mapTest := mapper.MappingLogin(check, UserData)
 	return mapTest
 }
 
