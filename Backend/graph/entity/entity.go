@@ -38,6 +38,7 @@ type BookUpdate struct {
 }
 
 type VideoData struct {
+	UserName    string
 	Video_link  string
 	Paid        bool
 	Video_Topic string
@@ -54,6 +55,7 @@ type UpdateVideoData struct {
 	BookName    string
 	ToolName    string
 	Active      *bool
+	Modified_By string
 }
 
 type FetchBook struct {
@@ -62,27 +64,27 @@ type FetchBook struct {
 }
 
 type ToolFilter struct {
-	Filter string
+	Filter       string
 	FilterColumn string
 }
 
-type FetchBlogData struct{
-	BlogText *string
-	Videotopic string
-	Bookname string
-	Toolname string
+type FetchBlogData struct {
+	BlogText      *string
+	Videotopic    string
+	Bookname      string
+	Toolname      string
 	Referencelink string
-	Status bool
+	Status        bool
 }
 
-type UserCheck struct{
+type UserCheck struct {
 	UserName string
 	Password string
 	UserRole string
 }
 
-type UserDetails struct{
-	UserID int
+type UserDetails struct {
+	UserID   int
 	UserName string
 	UserRole string
 }
@@ -92,7 +94,7 @@ type Login struct {
 	Password string
 }
 
-type LoginResponce struct{
+type LoginResponce struct {
 	JwtToken *string
 }
 
@@ -106,14 +108,14 @@ type FilterForTools struct {
 	ID *int
 }
 
-type Credentials struct{
+type Credentials struct {
 	Username string
 	Password string
 	AuthRole string
 }
 
-type FilterForBook struct{
-	Filter string
+type FilterForBook struct {
+	Filter       string
 	FilterColumn string
 }
 
@@ -154,14 +156,13 @@ type UpsertBlog struct {
 	Status        bool
 }
 
-
 type FetchBlog struct {
-	BlogId int
-	BlogText string
-	VideoId int
+	BlogId     int
+	BlogText   string
+	VideoId    int
 	VideoTopic string
-	BookId int
-	BookName string
-	ToolId int
-	ToolName string
+	BookId     int
+	BookName   string
+	ToolId     int
+	ToolName   string
 }

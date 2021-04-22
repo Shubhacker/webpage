@@ -175,6 +175,10 @@ type Login struct {
 
 type LoginResponce struct {
 	JwtToken *string `json:"JwtToken"`
+	UserName *string `json:"UserName"`
+	Email    *string `json:"Email"`
+	MobNo    *int    `json:"MobNo"`
+	UserRole *string `json:"UserRole"`
 	Error    bool    `json:"Error"`
 }
 

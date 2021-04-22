@@ -197,6 +197,10 @@ input login{
 }
 type loginResponce{
     JwtToken: String
+    UserName: String
+    Email: String
+    MobNo: Int
+    UserRole: String
     Error: Boolean!
 }
 

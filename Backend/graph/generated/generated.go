@@ -158,8 +158,12 @@ type ComplexityRoot struct {
 	}
 
 	LoginResponce struct {
+		Email    func(childComplexity int) int
 		Error    func(childComplexity int) int
 		JwtToken func(childComplexity int) int
+		MobNo    func(childComplexity int) int
+		UserName func(childComplexity int) int
+		UserRole func(childComplexity int) int
 	}
 
 	MasterExcelResponce struct {
@@ -686,6 +690,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.BlogResponce.Message(childComplexity), true
 
+	case "loginResponce.Email":
+		if e.complexity.LoginResponce.Email == nil {
+			break
+		}
+
+		return e.complexity.LoginResponce.Email(childComplexity), true
+
 	case "loginResponce.Error":
 		if e.complexity.LoginResponce.Error == nil {
 			break
@@ -699,6 +710,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.LoginResponce.JwtToken(childComplexity), true
+
+	case "loginResponce.MobNo":
+		if e.complexity.LoginResponce.MobNo == nil {
+			break
+		}
+
+		return e.complexity.LoginResponce.MobNo(childComplexity), true
+
+	case "loginResponce.UserName":
+		if e.complexity.LoginResponce.UserName == nil {
+			break
+		}
+
+		return e.complexity.LoginResponce.UserName(childComplexity), true
+
+	case "loginResponce.UserRole":
+		if e.complexity.LoginResponce.UserRole == nil {
+			break
+		}
+
+		return e.complexity.LoginResponce.UserRole(childComplexity), true
 
 	case "masterExcelResponce.Error":
 		if e.complexity.MasterExcelResponce.Error == nil {
@@ -992,6 +1024,10 @@ input login{
 }
 type loginResponce{
     JwtToken: String
+    UserName: String
+    Email: String
+    MobNo: Int
+    UserRole: String
     Error: Boolean!
 }
 
@@ -4524,6 +4560,134 @@ func (ec *executionContext) _loginResponce_JwtToken(ctx context.Context, field g
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _loginResponce_UserName(ctx context.Context, field graphql.CollectedField, obj *model.LoginResponce) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "loginResponce",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _loginResponce_Email(ctx context.Context, field graphql.CollectedField, obj *model.LoginResponce) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "loginResponce",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Email, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _loginResponce_MobNo(ctx context.Context, field graphql.CollectedField, obj *model.LoginResponce) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "loginResponce",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.MobNo, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _loginResponce_UserRole(ctx context.Context, field graphql.CollectedField, obj *model.LoginResponce) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "loginResponce",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserRole, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _loginResponce_Error(ctx context.Context, field graphql.CollectedField, obj *model.LoginResponce) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -6319,6 +6483,14 @@ func (ec *executionContext) _loginResponce(ctx context.Context, sel ast.Selectio
 			out.Values[i] = graphql.MarshalString("loginResponce")
 		case "JwtToken":
 			out.Values[i] = ec._loginResponce_JwtToken(ctx, field, obj)
+		case "UserName":
+			out.Values[i] = ec._loginResponce_UserName(ctx, field, obj)
+		case "Email":
+			out.Values[i] = ec._loginResponce_Email(ctx, field, obj)
+		case "MobNo":
+			out.Values[i] = ec._loginResponce_MobNo(ctx, field, obj)
+		case "UserRole":
+			out.Values[i] = ec._loginResponce_UserRole(ctx, field, obj)
 		case "Error":
 			out.Values[i] = ec._loginResponce_Error(ctx, field, obj)
 			if out.Values[i] == graphql.Null {

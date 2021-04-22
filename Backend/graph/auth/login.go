@@ -130,3 +130,12 @@ func GetAuthRole(ctx context.Context) *string {
 	}
 	return authRole
 }
+
+func GetUserName(ctx context.Context) *string {
+	var authRole *string
+	authRoleIDValue, ok := ctx.Value(userNameCtxKey).(string)
+	if ok {
+		authRole = &authRoleIDValue
+	}
+	return authRole
+}
