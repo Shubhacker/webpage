@@ -166,6 +166,7 @@ func UpdateUserData(ctx context.Context, input model.UpdateUser) *model.UserResp
 	log.Println("UpdateUserData()")
 	var responce model.UserResponce
 	AuthRole := auth.GetAuthRole(ctx)
+	UserName := auth.GetUserName(ctx)
 	if *AuthRole != "developer" {
 		responce.Message = "Developer Permission Require For Action"
 	}
@@ -176,7 +177,7 @@ func UpdateUserData(ctx context.Context, input model.UpdateUser) *model.UserResp
 		responce.Message = err.Error()
 		return &responce
 	}
-	err = postgres.UpdateUserData(mapData)
+	err = postgres.UpdateUserData(mapData, *UserName)
 	if err != nil {
 		responce.Message = err.Error()
 		return &responce

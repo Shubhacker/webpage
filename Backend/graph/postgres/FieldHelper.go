@@ -20,3 +20,17 @@ where ut.user_name = $1`
 	}
 	return UserRole
 }
+
+func FetchSecretKey() string {
+	log.Println("FetchSecretKey()")
+	if pool == nil {
+		pool = GetPool()
+	}
+	var SecretKey string
+	QueryString := `select description from code where value = 'Secret Key'`
+	err := pool.QueryRow(context.Background(), QueryString).Scan(&SecretKey)
+	if err != nil {
+		log.Println("Error in FetchSecretKey()")
+	}
+	return SecretKey
+}

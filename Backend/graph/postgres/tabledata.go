@@ -404,7 +404,7 @@ func IsPasswordRight(UserName string, Password string) bool {
 	return result
 }
 
-func UpdateUserData(entity *entity.UpdateUser) error {
+func UpdateUserData(entity *entity.UpdateUser, UserName string) error {
 	log.Println("UpdateUserData()")
 	if pool == nil {
 		pool = GetPool()
@@ -445,7 +445,8 @@ func UpdateUserData(entity *entity.UpdateUser) error {
 		inputargs = append(inputargs, entity.Is_active)
 		querystring += `, `
 	}
-	querystring += ` date_modified = (select current_timestamp) where user_name = ?;`
+	querystring += ` date_modified = (select current_timestamp), modified_by = ? where user_name = ?`
+	inputargs = append(inputargs, UserName)
 	inputargs = append(inputargs, entity.User_name)
 	querystring = sqlx.Rebind(sqlx.DOLLAR, querystring)
 	_, err = tx.Exec(context.Background(), querystring, inputargs...)

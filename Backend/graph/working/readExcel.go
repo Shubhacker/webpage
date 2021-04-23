@@ -7,7 +7,7 @@ import (
 )
 
 func check() {
-	f, err := excelize.OpenFile("C:\\blogger\\src\\Backend\\Test.xlsx")
+	f, err := excelize.OpenFile("C:\\blogger\\src\\Backend\\Master.xlsx")
 	if err != nil {
 		log.Println(err)
 	}
