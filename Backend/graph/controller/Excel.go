@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"log"
 
 	"github.com/shubhacker/gqlgen-todos/graph/auth"
 	"github.com/shubhacker/gqlgen-todos/graph/model"
@@ -31,6 +32,7 @@ func CreateExcelForUser(ctx context.Context) *model.ExcelUserResponce {
 func MaterExcelFetch(ctx context.Context) *model.MasterExcelResponce {
 	var responce model.MasterExcelResponce
 	AuthRole := auth.GetAuthRole(ctx)
+	log.Println(AuthRole)
 	if *AuthRole != "developers" {
 		responce.Error = true
 		responce.Message = "Need Developer Permissiono!"

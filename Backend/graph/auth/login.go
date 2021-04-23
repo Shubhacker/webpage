@@ -13,7 +13,7 @@ import (
 	"github.com/shubhacker/gqlgen-todos/graph/postgres"
 )
 
-var mySigningKey = []byte("mysupersecretphrase")
+var mySigningKey = []byte(postgres.FetchSecretKey())
 
 type contextKey struct {
 	name string
@@ -24,13 +24,12 @@ var userRoleCtxKey = &contextKey{"UserRole"}
 
 func GenerateJWT(Username string, Password string, UserRole string) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
-
 	claims := token.Claims.(jwt.MapClaims)
 	claims["authorized"] = true
 	claims["user"] = Username
 	claims["password"] = Password
 	claims["UserRole"] = UserRole
-	claims["exp"] = time.Now().Add(time.Second * 10)
+	claims["exp"] = time.Now().Add(time.Minute * 10)
 
 	tokenString, err := token.SignedString(mySigningKey)
 	if err != nil {
@@ -125,6 +124,7 @@ func ForContext(ctx context.Context) (*string, *string) {
 func GetAuthRole(ctx context.Context) *string {
 	var authRole *string
 	authRoleIDValue, ok := ctx.Value(userRoleCtxKey).(string)
+	log.Println(authRoleIDValue)
 	if ok {
 		authRole = &authRoleIDValue
 	}

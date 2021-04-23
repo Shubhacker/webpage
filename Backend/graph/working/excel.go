@@ -1,8 +1,13 @@
 package working
 
 import (
+	_ "image/gif"
 	"log"
 	"strconv"
+
+	_ "image/jpeg"
+
+	_ "image/png"
 
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/shubhacker/gqlgen-todos/graph/entity"
@@ -41,7 +46,7 @@ func CreateExcel(entity []entity.UserExcel) string {
 func CreateExcelForMaster(entity []entity.MasterExcel) string {
 	log.Println("CreateExcelForMaster()")
 	f := excelize.NewFile()
-	op := 1
+	op := 10
 	key1 := 0
 	key2 := 0
 	key3 := 0
@@ -68,7 +73,18 @@ func CreateExcelForMaster(entity []entity.MasterExcel) string {
 	UserSheet := f.NewSheet("User Sheet")
 	VideoSheet := f.NewSheet("Video Sheet")
 	BlogSheet := f.NewSheet("Blog Sheet")
-
+	err := f.AddPicture("User Sheet", "A1", "graph\\Images\\ExcelImage.png", `{"x_scale": 0.5, "y_scale": 0.5}`)
+	if err != nil {
+		log.Println("Error In User Picture", err)
+	}
+	err = f.AddPicture("Video Sheet", "A1", "graph\\Images\\ExcelImage.png", `{"x_scale": 0.5, "y_scale": 0.5}`)
+	if err != nil {
+		log.Println("Error In Video Picture", err)
+	}
+	err = f.AddPicture("Blog Sheet", "A1", "graph\\Images\\ExcelImage.png", `{"x_scale": 0.5, "y_scale": 0.5}`)
+	if err != nil {
+		log.Println("Error In Blog Picture", err)
+	}
 	f.SetCellValue("User Sheet", Column1, "UserName")
 	f.SetCellValue("User Sheet", Column2, "PassWord")
 	f.SetCellValue("User Sheet", Column3, "UserRole")
@@ -116,7 +132,7 @@ func CreateExcelForMaster(entity []entity.MasterExcel) string {
 
 	}
 	key1 = 0
-	op = 3
+	op = 13
 	for _ = range Username {
 		Column1 = "A" + strconv.Itoa(op)
 		Column2 = "B" + strconv.Itoa(op)
@@ -133,7 +149,7 @@ func CreateExcelForMaster(entity []entity.MasterExcel) string {
 		key1 += 1
 	}
 	key2 = 0
-	op = 3
+	op = 13
 	for _ = range VideoTopic {
 		Column1 = "A" + strconv.Itoa(op)
 		Column2 = "B" + strconv.Itoa(op)
@@ -152,7 +168,7 @@ func CreateExcelForMaster(entity []entity.MasterExcel) string {
 		key2 += 1
 	}
 	key3 = 0
-	op = 3
+	op = 13
 	for _ = range BlogText {
 		Column1 = "A" + strconv.Itoa(op)
 		Column2 = "B" + strconv.Itoa(op)
@@ -165,7 +181,7 @@ func CreateExcelForMaster(entity []entity.MasterExcel) string {
 	f.SetActiveSheet(UserSheet)
 	f.SetActiveSheet(VideoSheet)
 	f.SetActiveSheet(BlogSheet)
-	if err := f.SaveAs("Test.xlsx"); err != nil {
+	if err := f.SaveAs("Master.xlsx"); err != nil {
 		log.Println(err.Error())
 	}
 	return "Excel Created Successfully"
